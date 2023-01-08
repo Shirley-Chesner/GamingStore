@@ -1,0 +1,68 @@
+.login-page {
+    padding: 5em 1.3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    display: flex;
+    flex-direction: row;
+    min-width: 80%;
+    position: relative;
+}
+
+.login-card .small-app-logo {
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+}
+
+.login-card .right-side {
+    width: 65%;
+    display: flex;
+    position: relative;
+}
+
+.login-card .right-side .login-background-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.login-card .right-side .app-logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.6em;
+}
+
+.login-card .right-side .app-logo svg {
+    height: 2em;
+    width: 2em;
+}
+
+.login-form {
+    width: 35%;
+    padding: 2em 4em;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form h2 {
+    margin: 0.3em;
+}
+
+.login-form .text-input {
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.login-form .login-btn {
+    margin: 1em 0;
+    width: 100%;
+}

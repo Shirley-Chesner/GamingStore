@@ -1,0 +1,21 @@
+.app-logo {
+    display: flex;
+    flex-direction: row;
+}
+
+.app-logo svg {
+    align-self: center;
+    display: flex;
+}
+
+.app-logo .app-logo-title {
+    margin: 0.3em;
+}
+
+.app-logo.small .app-logo-title {
+    font-size: 1.17em;
+}
+
+.app-logo.click {
+    cursor: pointer;
+}

@@ -18,6 +18,7 @@ export const TextInput: FC<Props> = ({ onChange, type = 'text', value, title }) 
 
     return (
         <TextField
+            className="text-input"
             label={title}
             value={value}
             onChange={handleChange}
