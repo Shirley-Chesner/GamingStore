@@ -1,0 +1,12 @@
+.navbar {
+    padding: 1.5em 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgb(63, 63, 179);
+    color: white;
+}
+
+.navbar a {
+    color: white;
+}
