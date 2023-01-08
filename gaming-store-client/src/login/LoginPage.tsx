@@ -1,11 +1,12 @@
 import './LoginPage.css';
 
 import Card from '@mui/material/Card';
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import { AppLogo, TextInput } from '../ui';
+import { AppLogo, PasswordInput, TextInput } from '../ui';
+import { useAuthContext } from '../providers/AuthProvider';
 
 export const LoginPage: FC = () => {
     return (
@@ -22,20 +23,45 @@ export const LoginPage: FC = () => {
     );
 };
 
+const MAX_PASSWORD_DIGITS = 8;
+
 const LoginForm: FC = () => {
-    const [email, setEmail] = useState<string>();
-    const [password, setPassword] = useState<string>();
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [isValid, setIsValid] = useState<boolean>(false);
+
+    const { login } = useAuthContext();
+
+    const onLogin = useCallback(async () => {
+        try {
+            const user = await login?.(email, password);
+            console.log('🚀 ~ file: loginPage.tsx:36 ~ onLogin ~ user', user);
+        } catch (e) {
+            console.log('🚀 ~ file: loginPage.tsx:38 ~ onLogin ~ e', e);
+        }
+    }, [email, password]);
+
+    useEffect(() => {
+        if (email.length > 0 && password.length >= MAX_PASSWORD_DIGITS) setIsValid(true);
+        else setIsValid(false);
+    }, [email, password]);
 
     return (
         <div className="login-form">
             <h2>Welcome Back!</h2>
             <span>continue with google, or enter your details</span>
             <TextInput title="Email" type="email" value={email} onChange={setEmail} />
-            <TextInput title="Password" type="password" value={password} onChange={setPassword} />
+            <PasswordInput value={password} onChange={setPassword} />
             <div>
                 <span className="forgot-password-btn">Forgot password</span>
             </div>
-            <Button className="login-btn" variant="contained" endIcon={<ArrowForwardIcon />}>
+            <Button
+                className="login-btn"
+                variant="contained"
+                disabled={!isValid}
+                onClick={onLogin}
+                endIcon={<ArrowForwardIcon />}
+            >
                 Login
             </Button>
             <div>
