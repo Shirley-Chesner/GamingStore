@@ -16,3 +16,39 @@
     cursor: pointer;
     text-decoration: underline;
 }
+
+.navbar .navbar-end {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.navbar .navbar-end .user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.navbar .navbar-end .avatar {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.navbar .navbar-end span {
+    margin: 0 0.3em;
+}
+
+.navbar .navbar-end .search-input {
+    margin: 0 0.5em;
+}
+.navbar .navbar-end .search-input > div {
+    background-color: rgb(35 35 140);
+}
+.navbar .navbar-end .search-input fieldset {
+    border-color: white;
+}
+.navbar .navbar-end .search-input input {
+    padding: 0.7em;
+}
+.navbar .navbar-end .search-input label {
+    line-height: 1;
+}

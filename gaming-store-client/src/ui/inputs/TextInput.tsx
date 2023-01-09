@@ -1,14 +1,24 @@
 import TextField from '@mui/material/TextField';
 import React, { FC, HTMLInputTypeAttribute, useCallback } from 'react';
+import classNames from 'classnames';
 
 interface Props {
     value?: string;
     type?: HTMLInputTypeAttribute;
     title?: string;
+    outline?: boolean;
+    className?: string;
     onChange?: (value: string) => void;
 }
 
-export const TextInput: FC<Props> = ({ onChange, type = 'text', value, title }) => {
+export const TextInput: FC<Props> = ({
+    onChange,
+    className,
+    type = 'text',
+    value,
+    title,
+    outline,
+}) => {
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             onChange?.(e.target.value);
@@ -18,12 +28,12 @@ export const TextInput: FC<Props> = ({ onChange, type = 'text', value, title }) 
 
     return (
         <TextField
-            className="text-input"
+            className={classNames('text-input', className)}
             label={title}
             value={value}
             onChange={handleChange}
             type={type}
-            variant="standard"
+            variant={!outline ? 'standard' : undefined}
         />
     );
 };

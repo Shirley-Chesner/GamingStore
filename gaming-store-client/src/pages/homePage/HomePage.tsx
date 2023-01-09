@@ -22,7 +22,7 @@ export const HomePage: FC = () => {
             <h1>I AM A HOME PAGE!!!</h1>
             <div className="home-page-games">
                 {games.map((game) => (
-                    <GameDetails {...game} />
+                    <GameDetails key={game.id} {...game} />
                 ))}
             </div>
         </div>

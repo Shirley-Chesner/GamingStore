@@ -10,7 +10,7 @@ import { Navbar } from './ui';
 
 const darkTheme = createTheme({
     palette: {
-        mode: 'light',
+        mode: 'dark',
     },
 });
 
