@@ -56,7 +56,7 @@ export const useAuth = () => {
         return user;
     };
 
-    const signOutFunc = async (url?: string) => {
+    const signOutFunc = async () => {
         // Router.push(url ? url : "/");
 
         await signOut();
