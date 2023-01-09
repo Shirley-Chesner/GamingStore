@@ -5,8 +5,8 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import { AppLogo, PasswordInput, TextInput } from '../ui';
-import { useAuthContext } from '../providers/AuthProvider';
+import { AppLogo, PasswordInput, TextInput } from '../../ui';
+import { useAuthContext } from '../../providers/AuthProvider';
 
 export const LoginPage: FC = () => {
     return (
