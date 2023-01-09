@@ -4,10 +4,11 @@ import { FC, useCallback, useState } from 'react';
 
 interface Props {
     value?: string;
+    title?: string;
     onChange?: (value: string) => void;
 }
 
-export const PasswordInput: FC<Props> = ({ value, onChange }) => {
+export const PasswordInput: FC<Props> = ({ value, title, onChange }) => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const handleClickShowPassword = useCallback(() => setShowPassword((show) => !show), []);
@@ -22,7 +23,7 @@ export const PasswordInput: FC<Props> = ({ value, onChange }) => {
 
     return (
         <FormControl className="password-input text-input" variant="standard">
-            <InputLabel>Password</InputLabel>
+            <InputLabel>{title ?? 'Password'}</InputLabel>
             <Input
                 value={value}
                 onChange={handleChange}

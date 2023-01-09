@@ -1,2 +1,2 @@
 export * from './inputs';
-export * from './AppLogo';
+export * from './app';

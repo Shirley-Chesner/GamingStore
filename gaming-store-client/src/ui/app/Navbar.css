@@ -11,3 +11,8 @@
 .navbar a {
     color: white;
 }
+
+.navbar .sign-out-btn {
+    cursor: pointer;
+    text-decoration: underline;
+}
