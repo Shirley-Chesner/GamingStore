@@ -7,7 +7,11 @@ const API_URL = 'https://api.rawg.io/api/';
 const LIMIT = 10;
 
 export async function getGames() {
-    const res = await _fetch('games', { page_size: LIMIT, ordering: '~rating' });
+    const res = await _fetch('games', {
+        page_size: LIMIT,
+        ordering: '-added',
+        metacritic: '80,100',
+    });
 
     return res?.results ? res.results.map(parseToBaseGame) : [];
 }
@@ -18,7 +22,8 @@ interface Query {
     page_size?: number;
     search?: string;
     search_exact?: string;
-    ordering?: Ordering | `~${Ordering}`;
+    metacritic?: string;
+    ordering?: Ordering | `-${Ordering}`;
 }
 
 interface ApiReturnType<T> {
