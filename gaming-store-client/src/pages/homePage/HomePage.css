@@ -1,0 +1,7 @@
+.home-page .home-page-games {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 1em;
+    justify-content: center;
+}

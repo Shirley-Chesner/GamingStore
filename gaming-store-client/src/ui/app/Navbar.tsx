@@ -2,7 +2,7 @@ import './Navbar.css';
 
 import { Link, Outlet } from 'react-router-dom';
 import { AppLogo } from './AppLogo';
-import { useAuthContext } from '../../providers/AuthProvider';
+import { useAuthContext } from '../../providers/auth/AuthProvider';
 
 export const Navbar = () => {
     const { user, signOut } = useAuthContext();

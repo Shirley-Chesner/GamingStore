@@ -5,7 +5,7 @@ import { FC, useCallback, useEffect } from 'react';
 
 import { AppLogo } from '../../ui';
 import { FormProps, LoginForm } from './LoginForm';
-import { useAuthContext } from '../../providers/AuthProvider';
+import { useAuthContext } from '../../providers/auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
 export const SignUpPage: FC = () => {
