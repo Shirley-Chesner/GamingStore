@@ -1,6 +1,7 @@
 import express from 'express';
-import { connectToDB } from '../controllers/db-controller';
+import { dbRoute } from './db-router';
 
-const router = express.Router()
+export const routes = express.Router();
 
-router.get('/', connectToDB );
+routes.use(dbRoute);
+

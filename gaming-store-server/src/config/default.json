@@ -1,5 +1,0 @@
-{
-    "hostname": "localhost",
-    "port": "1234",
-    "dbHostname": "mongodb://localhost:27017/GameStore"
-}
