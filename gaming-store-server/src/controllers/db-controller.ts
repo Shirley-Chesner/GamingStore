@@ -25,33 +25,6 @@ export class dbController {
         dbController.userModal = mongoose.model('users', userSchema);
     }
 
-    static async a() {
-        const co = new dbController.commentModal({
-        comment_id : 6,
-        game_id: 7,
-        user_id: 5,
-        comment: "hello world111",
-        replays: ["a", "b", "c55"],
-        likes: 6
-    })
-        await co.save();
-
-    //     const g = new dbController.gameModal({
-    //         game_id: 66,
-    //         price: 20,
-    //         rating: 1,
-    //         comments: [co._id],
-    //         how_many_bought: 2
-    //     })
-
-    //     await g.save();
-
-        await dbController.updateGame(66, {comments:[co._id]}, true)
-        // const u = new dbController.userModal({
-
-        // })
-    }
-
     static async insertComment(commentId: number, gameID: number, userID: Number, comment: String) {
         const newComment = new dbController.commentModal({ 
             comment_id: commentId,
