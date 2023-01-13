@@ -9,11 +9,13 @@ export class dbController {
     static userModal: mongoose.Model<any, unknown, unknown, unknown, any>;
 
     static connectToDB(dbHostname: string) {
+        // Connecting to db
         mongoose.set('strictQuery', false);
-        // mongoose.set('debug', true);
+        mongoose.set('debug', true);
         mongoose.connect(dbHostname);
         dbController.connection = mongoose.connection;
 
+        // Setting up the schemas and models
         const commentSchema = new mongoose.Schema(comment);
         const gameSchema = new mongoose.Schema(game);
         const userSchema = new mongoose.Schema(user);
@@ -21,11 +23,41 @@ export class dbController {
         dbController.commentModal = mongoose.model('comments', commentSchema);
         dbController.gameModal = mongoose.model('games', gameSchema);
         dbController.userModal = mongoose.model('users', userSchema);
+
+
+        // dbController.a();
+    }
+
+    static async a() {
+        const co = new dbController.commentModal({
+        comment_id : 6,
+        game_id: 7,
+        user_id: 5,
+        comment: "hello world111",
+        replays: ["a", "b", "c55"],
+        likes: 6
+    })
+        await co.save();
+
+    //     const g = new dbController.gameModal({
+    //         game_id: 66,
+    //         price: 20,
+    //         rating: 1,
+    //         comments: [co._id],
+    //         how_many_bought: 2
+    //     })
+
+    //     await g.save();
+
+        await dbController.updateGame(66, {comments:[co._id]}, true)
+        // const u = new dbController.userModal({
+
+        // })
     }
 
     static async insertComment(commentId: number, gameID: number, userID: Number, comment: String, replays: String[], likes: Number) {
         const newComment = new dbController.commentModal({ 
-            id: commentId,
+            comment_id: commentId,
             game_id: gameID,
             user_id: userID,
             comment: comment,
@@ -36,7 +68,7 @@ export class dbController {
 
     static async insertUser(userID: Number, profileName: String, profileDescription: String) {
         const newUser = new dbController.userModal({  
-            id: userID,
+            user_id: userID,
             game_library: [],
             wish_list: [],
             in_cart: [],
@@ -49,7 +81,7 @@ export class dbController {
 
     static async insertGame(gameID: Number, price: Number) {
         const newGame = new dbController.gameModal({ 
-            id: gameID,
+            game_id: gameID,
             price: price,
             rating: 0,
             comments: [],
@@ -57,21 +89,31 @@ export class dbController {
         await newGame.save();
     }
 
-    static updateComment(commentID: number, update: any ) {
-        dbController.commentModal.updateOne({id: commentID}, update);
+    static async updateComment(commentID: number, update: any, isUpdateArray: boolean = false  ) {
+        if (isUpdateArray) {
+            update = {$push: update};
+        }
+        await dbController.commentModal.updateOne({comment_id: commentID}, update);
     }
 
-    static updateUser(userID: number, update: any ) {
-        dbController.userModal.updateOne({id: userID}, update);
+    static async updateUser(userID: number, update: any, isUpdateArray: boolean = false  ) {
+        if (isUpdateArray) {
+            update = {$push: update};
+        }
+        await dbController.userModal.updateOne({uesr_id: userID}, update);
     }
 
-    static updateGame(gameID: number, update: any ) {
-        dbController.gameModal.updateOne({id: gameID}, update);
+    static async updateGame(gameID: number, update: any, isUpdateArray: boolean = false ) {
+        if (isUpdateArray) {
+            update = {$push: update};
+        }
+        await dbController.gameModal.updateOne({game_id: gameID}, update);
     }
 
     static getCommandInFormat(com: any) {
         return {
-            id: com.id,
+            _id: com._id,
+            comment_id: com.comment_id,
             game_id: com.game_id,
             user_id: com.user_id,
             comment: com.comment,
@@ -80,8 +122,68 @@ export class dbController {
         }
     }
 
-    static async getAllComments() {
-        const commentsRaw = await dbController.commentModal.find({}).exec().then();
+    static getUserInFormat(us: any) {
+        let usersComments: any[] = [];
+        us.comments.forEach(function(c: any) {
+            usersComments.push(dbController.getCommandInFormat(c))
+        })
+        return {
+            _id: us._id,
+            user_id: us.user_id,
+            game_library: us.game_library,
+            wish_list: us.wish_list,
+            in_cart: us.in_cart,
+            comments: usersComments,
+            ratings: us.ratings,
+            profile_name: us.profile_name,
+            profile_description: us.profile_description
+        }
+    }
+
+    static getGameInFormat(gm: any) {
+        let gamesComments: any[] = [];
+        gm.comments.forEach(function(c: any) {
+                gamesComments.push(dbController.getCommandInFormat(c))
+            })
+            return ({
+                _id: gm._id,
+                game_id: gm.game_id,
+                price: gm.price,
+                rating: gm.rating,
+                comments: gamesComments,
+                how_many_bought: gm.how_many_bought
+            })
+    }
+
+    // static async getAllComments() {
+    //     const commentsRaw = await dbController.commentModal.find({}).exec().then();
+    //     let comments: any[] = [];
+    //     commentsRaw.forEach(function(doc: any) {
+    //         comments.push(dbController.getCommandInFormat(doc))
+    //     })
+    //     return comments;
+    // }
+
+    // static async getAllUsers() {
+    //     const usersRaw = await dbController.userModal.find({}).exec().then();
+    //     let users: any[] = [];
+    //     usersRaw.forEach(function(doc: any) {
+    //         users.push(dbController.getUserInFormat(doc));
+    //     })
+    //     return users;
+    // }
+
+    // static async getAllGames() {
+    //     const gamesRaw = await dbController.gameModal.find({}).exec().then();
+    //     let games: any[] = [];
+    //     gamesRaw.forEach(function(doc: any) {
+    //         games.push(dbController.getGameInFormat(doc))
+    //     })
+    //     return games;
+    // }
+
+    static async getComments(condition: {} = {}) {
+        const commentsRaw = await dbController.commentModal.find(condition).exec().then();
         let comments: any[] = [];
         commentsRaw.forEach(function(doc: any) {
             comments.push(dbController.getCommandInFormat(doc))
@@ -89,69 +191,35 @@ export class dbController {
         return comments;
     }
 
-    static async getAllUsers() {
-        const usersRaw = await dbController.userModal.find({}).exec().then();
+    static async getUsers(condition: {} = {}) {
+        const usersRaw = await dbController.userModal.find(condition).exec().then();
         let users: any[] = [];
         usersRaw.forEach(function(doc: any) {
-            let usersComments: any[] = [];
-            doc.comments.forEach(function(c: any) {
-                usersComments.push(dbController.getCommandInFormat(c))
-            })
-            users.push({
-                id: doc.id,
-                game_library: doc.game_library,
-                wish_list: doc.wish_list,
-                in_cart: doc.in_cart,
-                comments: usersComments,
-                ratings: doc.ratings,
-                profile_name: doc.profile_name,
-                profile_description: doc.profile_description
-            })
+            users.push(dbController.getUserInFormat(doc));
         })
         return users;
     }
 
-    static async getAllGames() {
-        const gamesRaw = await dbController.gameModal.find({}).exec().then();
+    static async getGames(condition: {} = {}) {
+        const gamesRaw = await dbController.gameModal.find(condition).exec().then();
         let games: any[] = [];
         gamesRaw.forEach(function(doc: any) {
-            let gamesComments: any[] = [];
-            doc.comments.forEach(function(c: any) {
-                gamesComments.push(dbController.getCommandInFormat(c))
-            })
-            games.push({
-                id: doc.id,
-                price: doc.price,
-                rating: doc.rating,
-                comments: gamesComments,
-                how_many_bought: doc.how_many_bought
-            })
+            games.push(dbController.getGameInFormat(doc))
         })
         return games;
+        // return dbController.gameModal.find(condition);
     }
 
-    static findComment(condition: {}) {
-        return dbController.commentModal.find(condition);
+    static async deleteGame(gameId: number) {
+        await dbController.gameModal.deleteOne({game_id: gameId});
     }
 
-    static findUser(condition: {}) {
-        return dbController.userModal.find(condition);
+    static async deleteComment(commentId: number) {
+        await dbController.commentModal.deleteOne({comment_id: commentId});
     }
 
-    static findGame(condition: {}) {
-        return dbController.gameModal.find(condition);
-    }
-
-    static deleteGame(gameId: number) {
-        dbController.gameModal.deleteOne({id: gameId});
-    }
-
-    static deleteComment(commentId: number) {
-        dbController.commentModal.deleteOne({id: commentId});
-    }
-
-    static deleteUser(userId: number) {
-        dbController.userModal.deleteOne({id: userId});
+    static async deleteUser(userId: number) {
+        await dbController.userModal.deleteOne({user_id: userId});
     }
 }
 

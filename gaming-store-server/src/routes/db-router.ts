@@ -9,7 +9,7 @@ dbRoute.get('/', (req, res) => {
 });
 
 dbRoute.get('/comments', (req, res) => {
-    dbController.getAllComments().then((a) => {
+    dbController.getComments().then((a) => {
             res.send(a)
     });
 });
