@@ -23,9 +23,6 @@ export class dbController {
         dbController.commentModal = mongoose.model('comments', commentSchema);
         dbController.gameModal = mongoose.model('games', gameSchema);
         dbController.userModal = mongoose.model('users', userSchema);
-
-
-        // dbController.a();
     }
 
     static async a() {
@@ -55,14 +52,14 @@ export class dbController {
         // })
     }
 
-    static async insertComment(commentId: number, gameID: number, userID: Number, comment: String, replays: String[], likes: Number) {
+    static async insertComment(commentId: number, gameID: number, userID: Number, comment: String) {
         const newComment = new dbController.commentModal({ 
             comment_id: commentId,
             game_id: gameID,
             user_id: userID,
             comment: comment,
-            replays: replays,
-            likes: likes });
+            replays: [],
+            likes: 0 });
         await newComment.save();
     }
 
@@ -73,7 +70,7 @@ export class dbController {
             wish_list: [],
             in_cart: [],
             comments: [],
-            ratings: Number,
+            ratings: 0,
             profile_name: profileName,
             profile_description: profileDescription });
         await newUser.save();
@@ -155,33 +152,6 @@ export class dbController {
             })
     }
 
-    // static async getAllComments() {
-    //     const commentsRaw = await dbController.commentModal.find({}).exec().then();
-    //     let comments: any[] = [];
-    //     commentsRaw.forEach(function(doc: any) {
-    //         comments.push(dbController.getCommandInFormat(doc))
-    //     })
-    //     return comments;
-    // }
-
-    // static async getAllUsers() {
-    //     const usersRaw = await dbController.userModal.find({}).exec().then();
-    //     let users: any[] = [];
-    //     usersRaw.forEach(function(doc: any) {
-    //         users.push(dbController.getUserInFormat(doc));
-    //     })
-    //     return users;
-    // }
-
-    // static async getAllGames() {
-    //     const gamesRaw = await dbController.gameModal.find({}).exec().then();
-    //     let games: any[] = [];
-    //     gamesRaw.forEach(function(doc: any) {
-    //         games.push(dbController.getGameInFormat(doc))
-    //     })
-    //     return games;
-    // }
-
     static async getComments(condition: {} = {}) {
         const commentsRaw = await dbController.commentModal.find(condition).exec().then();
         let comments: any[] = [];
@@ -207,7 +177,6 @@ export class dbController {
             games.push(dbController.getGameInFormat(doc))
         })
         return games;
-        // return dbController.gameModal.find(condition);
     }
 
     static async deleteGame(gameId: number) {

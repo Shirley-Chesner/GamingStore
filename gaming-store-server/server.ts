@@ -2,6 +2,7 @@ import express from 'express';
 import config from 'config';
 
 import { routes } from './src/routes/router';
+import { bodyParser } from 'body-parser';
 
 import { dbController } from "./src/controllers/db-controller";
 
@@ -13,7 +14,9 @@ const port = config.get("port")
 dbController.connectToDB("mongodb://localhost:27017/GameStore");
 
 // routes
+app.use(bodyParser);
 app.use('/', routes);
+
 
 
 // app.get('/', (req, res) => {
