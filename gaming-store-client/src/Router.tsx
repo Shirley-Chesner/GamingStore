@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { HomePage } from './pages/homePage/HomePage';
 import { LoginPage, SignUpPage } from './pages/login/LoginPage';
 import { PageNotFound } from './pages/PageNotFound';
+import { SearchPage } from './pages/searchPage/SearchPage';
 import { useAuthContext } from './providers';
 import { Navbar } from './ui';
 
@@ -18,6 +19,9 @@ export const Router: FC = () => {
                 <Routes>
                     <Route path="/" element={<Navbar />}>
                         <Route index element={<HomePage />} />
+                    </Route>
+                    <Route path="/search" element={<Navbar />}>
+                        <Route index element={<SearchPage/>}/>
                     </Route>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/sign-up" element={<SignUpPage />} />
