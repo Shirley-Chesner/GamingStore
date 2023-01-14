@@ -5,34 +5,53 @@ import { TextInput } from "./../../ui/inputs/TextInput"
 import { SearchCards } from "./SearchCards"
 import { SearchResults } from "./SearchResults"
 
-import { Grid }  from '@mui/material';
+import { Button, Grid }  from '@mui/material';
 import { BaseGame } from "../../providers";
 import { getGames } from '../../providers/games/gamesProvider';
+import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
 
 export const SearchPage: React.FC = () => {
-    const [priceVal, setPriceVal] = React.useState<number>(0);
-    const [ratingVal, setRatingVal] = React.useState<number>(0);
+    const priceVal = React.useRef<number>(0);
+    const ratingVal = React.useRef<number>(-1);
+    const nameSearchVal = React.useRef<string>("");
     const [tagsVal, setTagsVal] = React.useState<string[]>([]);
     const [genreVal, setGenreVal] = React.useState<string[]>([]);
     const [results, setResults] = React.useState<BaseGame[]>([]);
     
-    const onSearch = (value: string) => {
-            console.log(value);       
+    const onSearch = async () => {
+        await updateSearchedGames();
     }
 
     const onPriceChange = (value: number) => {
-        setPriceVal(value as number);
+        // DOTO: Price will be added when the games are pushed into the DB
+        priceVal.current = value as number;
     }
 
-    const onRatingChange = (value: number) => {
-        setRatingVal(value as number);
+    const onRatingChange = async (value: number) => {
+        ratingVal.current = value;
+        await updateSearchedGames();
+
     }
 
     const updateSearchedGames = async () => {
-        if (tagsVal.length == 0 && genreVal.length == 0) {
+        console.log(nameSearchVal);
+        if (tagsVal.length == 0 && genreVal.length == 0 && ratingVal.current == -1 && nameSearchVal.current == "") {
             setResults([]);
         } else {
-            const newSearchedGames = await getGames(tagsVal.join(), genreVal.join());
+            let newSearchedGames = await getGames(tagsVal.join(), genreVal.join());           
+            if (ratingVal.current != -1) {
+                newSearchedGames = newSearchedGames.filter((game: BaseGame) => { 
+                    if (game.rating <= ratingVal.current && game.rating > ratingVal.current - 1) 
+                        return game;
+                }) 
+            }
+            if (nameSearchVal.current != "") {
+                newSearchedGames = newSearchedGames.filter((game: BaseGame) => {
+                    console.log(game.name);
+                    if (game.name.toLowerCase().includes(nameSearchVal.current.toLowerCase())) 
+                        return game;
+                })
+            }
             setResults([...newSearchedGames]);
         }
 
@@ -70,7 +89,10 @@ export const SearchPage: React.FC = () => {
                                 handleGenresChange={onGenreChange}/>
                 </Grid>
                 <Grid item xs={10} className="searchContent">
-                    <TextInput className="searchBar" title="Search" outline onChange={onSearch}/>
+                    <div className="searchArea">
+                       <TextInput className="searchBar" title="Search" outline  onChange={(value) => nameSearchVal.current = value}/> 
+                       <Button onClick={onSearch}>Search</Button>
+                    </div>
                     <SearchResults searchedGames={results}/> 
                 </Grid>
             </Grid>

@@ -19,3 +19,8 @@
     padding-right: 20px;
     text-align: left !important;
 }
+
+.addMoreTags {
+    display: flex;
+    align-items: flex-end;
+}

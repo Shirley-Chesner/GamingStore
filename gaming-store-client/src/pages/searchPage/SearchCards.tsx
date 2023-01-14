@@ -8,7 +8,10 @@ import { Card,
         FormGroup, Slider, 
         FormControlLabel, 
         Checkbox, 
-        Grid } from '@mui/material';
+        Grid,
+        Button } from '@mui/material';
+
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { TextInput } from "./../../ui/inputs/TextInput"
 
@@ -20,22 +23,70 @@ export interface Props {
 }
 
 export const SearchCards: React.FC<Props> = ({handlePriceChange, handleRatingChange, handleTagsChange, handleGenresChange}) => {
+    const [newTagVal, setNewTagVal] = React.useState<string>("");
+    const [newTagCheckBoxVal, setNewTagCheckBoxVal] = React.useState<string>("");
+    const [showNewTag, setShowNewTag] = React.useState<boolean>(false);
+
+    const [newGenreVal, setNewGenreVal] = React.useState<string>("");
+    const [newGenreCheckBoxVal, setNewGenreCheckBoxVal] = React.useState<string>("");
+    const [showNewGenre, setShowNewGenre] = React.useState<boolean>(false);
+
+    const newRatingVal = React.useRef<number>(-1);
+    const isRatingChecked = React.useRef<boolean>(false);
 
     const onPriceChange = (event: Event, value: number | number[] , activeThumb: Number) => {
         handlePriceChange(value as number);
     }
 
-    const onRatingChange = (event: Event, value: number | number[] , activeThumb: Number) => {
-        handleRatingChange(value as number);
+    const onRatingNumberChange = (event: Event, value: number | number[] , activeThumb: Number) => {
+        newRatingVal.current = value as number;
+        if (isRatingChecked.current) {
+            handleRatingChange(newRatingVal.current)
+        }
+    }
+
+    const onRatingChange = (event: any) => {
+        if (event.target.checked) {
+            isRatingChecked.current = true;
+            handleRatingChange(newRatingVal.current);
+        } else {
+            isRatingChecked.current = false;
+            handleRatingChange(-1);
+        }        
     }
 
     const onTagsChange = (event: any) => {
-        handleTagsChange(event.target.labels[0].innerText, event.target.checked);
+        let val: string = event.target.labels[0].innerText;
+        val = val.replaceAll(' ', '-');
+        handleTagsChange(val, event.target.checked);
     }
 
     const onGenresChange = (event: any) => {
-        handleGenresChange(event.target.labels[0].innerText, event.target.checked);
+        let val: string = event.target.labels[0].innerText;
+        val = val.replaceAll(' ', '-');
+        handleGenresChange(val, event.target.checked);
     }
+
+    const onAddTag = () => {
+        if (newTagVal.length != 0 ) {
+            setShowNewTag(true);
+            setNewTagCheckBoxVal(newTagVal);
+        } else {
+            setShowNewTag(false);
+        }
+        setNewTagVal("");
+    }
+
+    const onAddGenre = () => {
+        if (newGenreVal.length != 0 ) {
+            setShowNewGenre(true);
+            setNewGenreCheckBoxVal(newGenreVal);
+        } else {
+            setShowNewGenre(false);
+        }
+        setNewGenreVal("");
+    }
+
 
     return (
         <Grid container spacing={2} className="cardsGrid" direction={"column"}>
@@ -50,7 +101,11 @@ export const SearchCards: React.FC<Props> = ({handlePriceChange, handleRatingCha
                             <FormControlLabel control={<Checkbox/>} label="singleplayer" onChange={onTagsChange}/>
                             <FormControlLabel control={<Checkbox/>} label="open world" onChange={onTagsChange}/>
                             <FormControlLabel control={<Checkbox/>} label="third person" onChange={onTagsChange}/>
-                            <TextInput className="searchBarOfTags" title="Search for more"/>
+                            {showNewTag && <FormControlLabel control={<Checkbox />} label={newTagCheckBoxVal} onChange={onTagsChange}/>}
+                            <div className="addMoreTags">
+                                <TextInput className="searchBarOfTags" title="Search for more" value={newTagVal} onChange={setNewTagVal}/>
+                                <Button onClick={onAddTag}><CheckCircleIcon/></Button>
+                            </div>
                         </FormGroup>
                     </CardActions>
                 </Card>
@@ -66,7 +121,11 @@ export const SearchCards: React.FC<Props> = ({handlePriceChange, handleRatingCha
                             <FormControlLabel control={<Checkbox/>} label="platformer" onChange={onGenresChange}/>
                             <FormControlLabel control={<Checkbox/>} label="action" onChange={onGenresChange}/>
                             <FormControlLabel control={<Checkbox/>} label="RPG" onChange={onGenresChange}/>
-                            <TextInput className="searchBarOfTags" title="Search for more"/>
+                            {showNewGenre && <FormControlLabel control={<Checkbox />} label={newGenreCheckBoxVal} onChange={onGenresChange}/>}
+                            <div className="addMoreTags">
+                                <TextInput className="searchBarOfTags" title="Search for more"  value={newGenreVal} onChange={setNewGenreVal}/>
+                                <Button onClick={onAddGenre}><CheckCircleIcon/></Button>
+                            </div>  
                         </FormGroup>
                     </CardActions>
                 </Card>
@@ -100,6 +159,7 @@ export const SearchCards: React.FC<Props> = ({handlePriceChange, handleRatingCha
                     </CardContent>
                     <CardActions>
                         <FormGroup className="ratingSlider">
+                            <FormControlLabel control={<Checkbox/>} label="Search" onChange={onRatingChange} />
                             <Slider aria-label="Temperature" 
                                     step={1} 
                                     marks 
@@ -108,7 +168,7 @@ export const SearchCards: React.FC<Props> = ({handlePriceChange, handleRatingCha
                                     defaultValue={0}
                                     valueLabelDisplay="auto"
                                     className="ratingSlider"
-                                    onChange={onRatingChange}/>
+                                    onChange={onRatingNumberChange}/>
                         </FormGroup>
                     </CardActions>
                 </Card>
