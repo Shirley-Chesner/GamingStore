@@ -1,6 +1,8 @@
 import TextField from '@mui/material/TextField';
 import React, { FC, HTMLInputTypeAttribute, useCallback } from 'react';
 import classNames from 'classnames';
+import { InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface Props {
     value?: string;
@@ -33,7 +35,8 @@ export const TextInput: FC<Props> = ({
             value={value}
             onChange={handleChange}
             type={type}
-            variant={!outline ? 'standard' : undefined}
+            variant={!outline ? 'standard' : undefined}       
+            InputProps={{ startAdornment:(<InputAdornment position="end"><SearchIcon/></InputAdornment>),}}
         />
     );
 };

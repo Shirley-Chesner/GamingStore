@@ -1,0 +1,13 @@
+.searchBar {
+    width: 80%;
+    text-align: right;
+}
+
+.searchPageGrid {
+    margin-top: 30px;
+}
+
+.searchArea {
+    display: flex;
+}
+

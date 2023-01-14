@@ -1,0 +1,26 @@
+.priceActions {
+    width: 100% !important;
+}
+
+.ratingSlider {
+    width: 100% !important;
+}
+
+.cardsGrid{
+    padding-left: 20px;
+    padding-right: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 70px;
+}
+
+.cardLayout {
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: left !important;
+}
+
+.addMoreTags {
+    display: flex;
+    align-items: flex-end;
+}
