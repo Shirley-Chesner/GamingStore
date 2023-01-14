@@ -9,19 +9,32 @@ import { Card,
         FormControlLabel, 
         Checkbox, 
         Grid } from '@mui/material';
-        
+
 import { TextInput } from "./../../ui/inputs/TextInput"
 
-export const SearchCards: React.FC = () => {
-    const [priceVal, setPriceVal] = React.useState<number>(0);
-    const [ratingVal, setRatingVal] = React.useState<number>(0);
+export interface Props {
+    handlePriceChange: (value: number) => void;
+    handleRatingChange: (value: number) => void;
+    handleTagsChange: (tagName: string, isChecked: boolean) => void;
+    handleGenresChange: (tagName: string, isChecked: boolean) => void;
+}
+
+export const SearchCards: React.FC<Props> = ({handlePriceChange, handleRatingChange, handleTagsChange, handleGenresChange}) => {
 
     const onPriceChange = (event: Event, value: number | number[] , activeThumb: Number) => {
-        setPriceVal(value as number);
+        handlePriceChange(value as number);
     }
 
     const onRatingChange = (event: Event, value: number | number[] , activeThumb: Number) => {
-        setRatingVal(value as number);
+        handleRatingChange(value as number);
+    }
+
+    const onTagsChange = (event: any) => {
+        handleTagsChange(event.target.labels[0].innerText, event.target.checked);
+    }
+
+    const onGenresChange = (event: any) => {
+        handleGenresChange(event.target.labels[0].innerText, event.target.checked);
     }
 
     return (
@@ -33,10 +46,26 @@ export const SearchCards: React.FC = () => {
                     </CardContent>
                     <CardActions>
                         <FormGroup>
-                            <FormControlLabel control={<Checkbox/>} label="Fantasy" />
-                            <FormControlLabel control={<Checkbox/>} label="Adventure" />
-                            <FormControlLabel control={<Checkbox/>} label="Strategy" />
-                            <FormControlLabel control={<Checkbox/>} label="puzzle" />
+                            <FormControlLabel control={<Checkbox/>} label="fantasy" onChange={onTagsChange} />
+                            <FormControlLabel control={<Checkbox/>} label="singleplayer" onChange={onTagsChange}/>
+                            <FormControlLabel control={<Checkbox/>} label="open world" onChange={onTagsChange}/>
+                            <FormControlLabel control={<Checkbox/>} label="third person" onChange={onTagsChange}/>
+                            <TextInput className="searchBarOfTags" title="Search for more"/>
+                        </FormGroup>
+                    </CardActions>
+                </Card>
+            </Grid>
+            <Grid item xs={2}>
+                <Card className="cardLayout">
+                    <CardContent>
+                        <Typography> Narrow By Genre: </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox/>} label="adventure" onChange={onGenresChange} />
+                            <FormControlLabel control={<Checkbox/>} label="platformer" onChange={onGenresChange}/>
+                            <FormControlLabel control={<Checkbox/>} label="action" onChange={onGenresChange}/>
+                            <FormControlLabel control={<Checkbox/>} label="RPG" onChange={onGenresChange}/>
                             <TextInput className="searchBarOfTags" title="Search for more"/>
                         </FormGroup>
                     </CardActions>
@@ -50,14 +79,13 @@ export const SearchCards: React.FC = () => {
                 <CardActions >
                     <div className="priceActions">                    
                         <Slider aria-label="Temperature"
-                                value={priceVal} 
-                                onChange={onPriceChange} 
                                 step={20} 
                                 marks 
                                 min={0} 
                                 max={100} 
                                 defaultValue={50}
-                                valueLabelDisplay="auto"/>
+                                valueLabelDisplay="auto"
+                                onChange={onPriceChange}/>
                         <FormGroup>
                             <FormControlLabel control={<Checkbox />} label="Special Offers" />
                         </FormGroup>
@@ -72,16 +100,15 @@ export const SearchCards: React.FC = () => {
                     </CardContent>
                     <CardActions>
                         <FormGroup className="ratingSlider">
-                            <Slider aria-label="Temperature"
-                                    value={ratingVal} 
-                                    onChange={onRatingChange} 
+                            <Slider aria-label="Temperature" 
                                     step={1} 
                                     marks 
                                     min={0} 
                                     max={5} 
                                     defaultValue={0}
                                     valueLabelDisplay="auto"
-                                    className="ratingSlider"/>
+                                    className="ratingSlider"
+                                    onChange={onRatingChange}/>
                         </FormGroup>
                     </CardActions>
                 </Card>

@@ -4,15 +4,15 @@ import { parseToBaseGame } from './gamesApiParses';
 const API_KEY = 'd4687bc2b72c4bd281670ceae4e8c209';
 const API_URL = 'https://api.rawg.io/api/';
 
-const LIMIT = 10;
+const LIMIT = 30;
 
-export async function getGames(tags: string = "") {
+export async function getGames(tags: string = "", genres: string = "") {
     const qr = {
         page_size: LIMIT,
         ordering: '-added',
-        metacritic: '80,100'
+        // metacritic: '80,100'
     }
-    const updatedQr: any = Object.assign(qr, tags.length !=0 && {tags:tags, generes: tags})
+    const updatedQr: any = Object.assign(qr, tags.length !=0 && {tags:tags}, genres.length !=0 && {genres: genres})
     const res = await _fetch('games', updatedQr);
     return res?.results ? res.results.map(parseToBaseGame) : [];
 }
