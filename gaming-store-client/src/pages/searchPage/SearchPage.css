@@ -1,13 +1,9 @@
 .searchBar {
     width: 80%;
-    margin-top: 30px;
     text-align: right;
 }
 
-.searchByTags {
-    display: flex;
-    justify-items: center;
-    flex-direction: row;
-    justify-content: space-evenly;
-    margin-top: 25px;
+.searchPageGrid {
+    margin-top: 30px;
 }
+

@@ -1,0 +1,8 @@
+.resultContainer {
+    border: 1px solid white;
+    display: flex;
+    height: 100%;
+    margin-left: 30px !important;
+    margin-right: 30px !important;
+    margin-top: 30px;
+}
