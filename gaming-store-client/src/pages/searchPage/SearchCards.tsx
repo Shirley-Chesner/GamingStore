@@ -34,11 +34,11 @@ export const SearchCards: React.FC<Props> = ({handlePriceChange, handleRatingCha
     const newRatingVal = React.useRef<number>(-1);
     const isRatingChecked = React.useRef<boolean>(false);
 
-    const onPriceChange = (event: Event, value: number | number[] , activeThumb: Number) => {
+    const onPriceChange = (event: Event, value: number | number[] , activeThumb: number) => {
         handlePriceChange(value as number);
     }
 
-    const onRatingNumberChange = (event: Event, value: number | number[] , activeThumb: Number) => {
+    const onRatingNumberChange = (event: Event, value: number | number[] , activeThumb: number) => {
         newRatingVal.current = value as number;
         if (isRatingChecked.current) {
             handleRatingChange(newRatingVal.current)

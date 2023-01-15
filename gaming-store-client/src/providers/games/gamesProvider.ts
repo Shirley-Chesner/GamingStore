@@ -6,14 +6,23 @@ const API_URL = 'https://api.rawg.io/api/';
 
 const LIMIT = 30;
 
-export async function getGames(tags: string = "", genres: string = "") {
-    const qr = {
+export async function getGames() {
+    const res = await _fetch('games', {
         page_size: LIMIT,
         ordering: '-added',
         // metacritic: '80,100'
-    }
-    const updatedQr: any = Object.assign(qr, tags.length !=0 && {tags:tags}, genres.length !=0 && {genres: genres})
-    const res = await _fetch('games', updatedQr);
+    });
+    return res?.results ? res.results.map(parseToBaseGame) : [];
+}
+
+export async function searchGames(tags = '', genres = '') {
+    const res = await _fetch('games', {
+        page_size: LIMIT,
+        ordering: '-added',
+        tags,
+        genres,
+    });
+
     return res?.results ? res.results.map(parseToBaseGame) : [];
 }
 
@@ -25,8 +34,8 @@ interface Query {
     search_exact?: string;
     metacritic?: string;
     ordering?: Ordering | `-${Ordering}`;
-    tags?: string,
-    generes?: string,
+    tags?: string;
+    genres?: string;
 }
 
 interface ApiReturnType<T> {
@@ -36,7 +45,7 @@ interface ApiReturnType<T> {
     results: T[];
 }
 
-export async function _fetch<T>(prefix: string, query: Query): Promise<ApiReturnType<T> | null> {
+export async function _fetch<T>(prefix: string, query?: Query): Promise<ApiReturnType<T> | null> {
     try {
         const response = await fetch(`${API_URL}${prefix}?key=${API_KEY}${_queryToString(query)}`, {
             headers: {
@@ -56,6 +65,11 @@ export async function _fetch<T>(prefix: string, query: Query): Promise<ApiReturn
     }
 }
 
-function _queryToString(query: Query): string {
-    return Object.entries(query).reduce((prev, [key, value]) => `${prev}&${key}=${value}`, '');
+function _queryToString(query?: Query): string {
+    if (!query) return '';
+
+    return Object.entries(query).reduce(
+        (prev, [key, value]) => (value !== '' ? `${prev}&${key}=${value}` : prev),
+        '',
+    );
 }

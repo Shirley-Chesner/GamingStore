@@ -8,7 +8,7 @@
     max-height: 1000px;
 }
 
-.home-page-games {
+.resultContainer .home-page-games {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;

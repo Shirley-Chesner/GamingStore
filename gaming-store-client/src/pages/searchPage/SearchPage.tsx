@@ -7,7 +7,7 @@ import { SearchResults } from "./SearchResults"
 
 import { Button, Grid }  from '@mui/material';
 import { BaseGame } from "../../providers";
-import { getGames } from '../../providers/games/gamesProvider';
+import { searchGames } from '../../providers/games/gamesProvider';
 import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
 
 export const SearchPage: React.FC = () => {
@@ -38,7 +38,7 @@ export const SearchPage: React.FC = () => {
         if (tagsVal.length == 0 && genreVal.length == 0 && ratingVal.current == -1 && nameSearchVal.current == "") {
             setResults([]);
         } else {
-            let newSearchedGames = await getGames(tagsVal.join(), genreVal.join());           
+            let newSearchedGames = await searchGames(tagsVal.join(), genreVal.join());           
             if (ratingVal.current != -1) {
                 newSearchedGames = newSearchedGames.filter((game: BaseGame) => { 
                     if (game.rating <= ratingVal.current && game.rating > ratingVal.current - 1) 
@@ -58,24 +58,24 @@ export const SearchPage: React.FC = () => {
     }
 
     const onTagsChange = async (tagName: string, isChecked: boolean) => {
-        let newVals = tagsVal;
+        const newVals = [...tagsVal];
         if (isChecked) {
             newVals.push(tagName);
         } else {
             newVals.splice(tagsVal.indexOf(tagName), 1);
         }
-        setTagsVal([...newVals]);
+        setTagsVal(newVals);
         await updateSearchedGames();
     }
 
     const onGenreChange = async (tagName: string, isChecked: boolean) => {
-        let newVals = genreVal;
+        const newVals = [...genreVal];
         if (isChecked) {
             newVals.push(tagName);
         } else {
             newVals.splice(genreVal.indexOf(tagName), 1);
         }
-        setGenreVal([...newVals]);
+        setGenreVal(newVals);
         await updateSearchedGames();
     }
 
