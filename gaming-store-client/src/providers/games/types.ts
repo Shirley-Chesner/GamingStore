@@ -4,7 +4,7 @@ export interface BaseGame {
     imageUrl: string;
     rating: number;
     added: number;
-    metacritic: number;
+    metacritic?: number;
 }
 
 // TODO: add more fields

@@ -14,9 +14,11 @@ export const GameDetails: FC<Props> = ({ added, id, imageUrl, metacritic, name, 
             <img src={imageUrl} />
             <h3>{name}</h3>
             <div className="details">
-                <span className={classNames('metacritic', _getRatingClassname(metacritic))}>
-                    {metacritic}
-                </span>
+                {metacritic && (
+                    <span className={classNames('metacritic', _getRatingClassname(metacritic))}>
+                        {metacritic}
+                    </span>
+                )}
                 <span>{added}</span>
             </div>
         </Card>
