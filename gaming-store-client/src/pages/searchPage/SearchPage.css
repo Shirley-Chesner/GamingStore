@@ -1,3 +1,7 @@
+.search-page {
+    overflow-y: auto;
+}
+
 .searchBar {
     width: 80%;
     text-align: right;
@@ -10,4 +14,3 @@
 .searchArea {
     display: flex;
 }
-

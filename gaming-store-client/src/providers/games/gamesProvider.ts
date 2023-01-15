@@ -6,13 +6,12 @@ const API_URL = 'https://api.rawg.io/api/';
 
 const LIMIT = 30;
 
-export async function getGames() {
-    const res = await _fetch('games', {
+export function getGamesUrl() {
+    return getUrl('games', {
         page_size: LIMIT,
         ordering: '-added',
         // metacritic: '80,100'
     });
-    return res?.results ? res.results.map(parseToBaseGame) : [];
 }
 
 export async function searchGames(tags = '', genres = '') {
@@ -28,7 +27,7 @@ export async function searchGames(tags = '', genres = '') {
 
 type Ordering = 'name' | 'released' | 'added' | 'created' | 'updated' | 'rating' | 'metacritic';
 
-interface Query {
+interface GameQuery {
     page_size?: number;
     search?: string;
     search_exact?: string;
@@ -38,16 +37,26 @@ interface Query {
     genres?: string;
 }
 
-interface ApiReturnType<T> {
+export interface ApiReturnType<T> {
     count: number;
     next: string;
     previous: string;
     results: T[];
 }
 
-export async function _fetch<T>(prefix: string, query?: Query): Promise<ApiReturnType<T> | null> {
+type Prefix = 'games';
+
+async function _fetch<T>(prefix: Prefix, query?: GameQuery) {
+    return await fetchFromUrl<T>(getUrl(prefix, query));
+}
+
+export function getUrl(prefix: Prefix, query?: GameQuery) {
+    return `${API_URL}${prefix}?key=${API_KEY}${_queryToString(query)}`;
+}
+
+export async function fetchFromUrl<T>(url: string): Promise<ApiReturnType<T>> {
     try {
-        const response = await fetch(`${API_URL}${prefix}?key=${API_KEY}${_queryToString(query)}`, {
+        const response = await fetch(url, {
             headers: {
                 accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -61,11 +70,11 @@ export async function _fetch<T>(prefix: string, query?: Query): Promise<ApiRetur
         return json;
     } catch (e) {
         console.log('🚀 ~ file: gamesProvider.ts:15 ~ _fetch ~ e', e);
-        return null;
+        throw e;
     }
 }
 
-function _queryToString(query?: Query): string {
+function _queryToString(query?: GameQuery): string {
     if (!query) return '';
 
     return Object.entries(query).reduce(

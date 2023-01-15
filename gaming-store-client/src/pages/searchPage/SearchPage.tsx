@@ -80,7 +80,7 @@ export const SearchPage: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className="search-page">
             <Grid container className="searchPageGrid">
                 <Grid item xs={2}>
                     <SearchCards handlePriceChange={onPriceChange} 

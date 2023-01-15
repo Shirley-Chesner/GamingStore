@@ -1,7 +1,15 @@
 .home-page .home-page-games {
+    max-height: 80vh;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     padding: 1em;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.home-page {
+    display: flex;
+    align-items: center;
     justify-content: center;
 }
