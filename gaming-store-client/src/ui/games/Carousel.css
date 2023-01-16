@@ -1,12 +1,23 @@
+.carousel-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0.5em 2em;
+}
+
 .carousel {
     position: relative;
     display: flex;
     flex-direction: row;
     width: 100%;
-    margin: 0.5em 2em;
     height: 15em;
     user-select: none;
     overflow: hidden;
+}
+
+.carousel-title {
+    margin: 0;
+    text-align: left;
 }
 
 .carousel .carousel-arrow {
@@ -76,6 +87,7 @@
     display: flex;
     background-color: rgba(60, 74, 148, 0.5);
     /* background-image: linear-gradient(rgba(29, 38, 113, 0.5), rgba(195, 55, 100, 0.5)); */
+    /* mix-blend-mode: difference; */
     transition: 0.2s background-color, 0.2s transform;
 }
 
@@ -87,7 +99,7 @@
 
 /* hover over item */
 .carousel-item:hover .item-name {
-    background-color: transparent;
+    background-color: rgba(60, 74, 148, 0.3);
     background-image: none;
     transform: scale(1.3);
 }

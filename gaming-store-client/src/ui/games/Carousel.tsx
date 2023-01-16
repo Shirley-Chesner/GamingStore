@@ -3,6 +3,7 @@ import './Carousel.css';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Skeleton } from '@mui/material';
 import classNames from 'classnames';
 
 interface Item {
@@ -14,13 +15,21 @@ interface Item {
 
 interface Props {
     items: Item[];
+    title: string;
     itemsInOneSlider?: number;
     autoSlide?: boolean;
+    isLoading?: boolean;
 }
 
 type SlideDirection = 'prev' | 'next';
 
-export const Carousel: FC<Props> = ({ items, itemsInOneSlider = 1, autoSlide }) => {
+export const Carousel: FC<Props> = ({
+    items,
+    itemsInOneSlider = 1,
+    autoSlide,
+    title,
+    isLoading,
+}) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [nextSlide, setNextSlide] = useState(-1);
     const [slideTo, setSlideTo] = useState<SlideDirection | null>(null);
@@ -87,27 +96,50 @@ export const Carousel: FC<Props> = ({ items, itemsInOneSlider = 1, autoSlide }) 
     }, [autoSlide, slideWithAnimation]);
 
     return (
-        <div className="carousel">
-            {itemsMatrix.map((items, index) => (
-                <div className={getSlideClassNames(index)} key={index}>
-                    {items.map((item) => (
-                        <CarouselItem key={item.id} {...item} width={100 / itemsInOneSlider} />
-                    ))}
-                </div>
-            ))}
-            <CarouselArrowIcon type="prev" onClick={slideWithAnimation} />
-            <CarouselArrowIcon type="next" onClick={slideWithAnimation} />
-            <div className="carousel-bread-crumbs">
-                {Array.from({ length: maxSlides }).map((_, index) => (
-                    <CarouselBreadCrumb
-                        key={index}
-                        slide={index}
-                        onClick={slideWithAnimation}
-                        isInAnimation={!!slideTo}
-                        currentSlide={currentSlide}
-                        nextSlide={nextSlide}
-                    />
-                ))}
+        <div className="carousel-wrapper">
+            <h1 className="carousel-title">{title}</h1>
+            <div className="carousel">
+                {isLoading ? (
+                    <div className="carousel-slide active">
+                        {Array.from({ length: itemsInOneSlider }).map((_, index) => (
+                            <Skeleton
+                                key={`skeleton|${index}`}
+                                className="carousel-item"
+                                width={`${100 / itemsInOneSlider}%`}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    itemsMatrix.map((items, index) => (
+                        <div className={getSlideClassNames(index)} key={index}>
+                            {items.map((item) => (
+                                <CarouselItem
+                                    key={item.id}
+                                    {...item}
+                                    width={100 / itemsInOneSlider}
+                                />
+                            ))}
+                        </div>
+                    ))
+                )}
+                {maxSlides > 1 && (
+                    <>
+                        <CarouselArrowIcon type="prev" onClick={slideWithAnimation} />
+                        <CarouselArrowIcon type="next" onClick={slideWithAnimation} />
+                        <div className="carousel-bread-crumbs">
+                            {Array.from({ length: maxSlides }).map((_, index) => (
+                                <CarouselBreadCrumb
+                                    key={index}
+                                    slide={index}
+                                    onClick={slideWithAnimation}
+                                    isInAnimation={!!slideTo}
+                                    currentSlide={currentSlide}
+                                    nextSlide={nextSlide}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
