@@ -73,6 +73,10 @@
     display: flex;
     margin: 1em 0.5em;
     overflow: hidden;
+    border-radius: 5px;
+}
+.carousel-item.click {
+    cursor: pointer;
 }
 
 .carousel-item .item-name {

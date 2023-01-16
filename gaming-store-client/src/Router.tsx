@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
+import { GenrePage } from './pages/homePage/GenrePage';
 
 import { HomePage } from './pages/homePage/HomePage';
 import { LoginPage, SignUpPage } from './pages/login/LoginPage';
@@ -19,13 +20,13 @@ export const Router: FC = () => {
                 <Routes>
                     <Route path="/" element={<Navbar />}>
                         <Route index element={<HomePage />} />
-                    </Route>
-                    <Route path="/search" element={<Navbar />}>
-                        <Route index element={<SearchPage/>}/>
+                        <Route path="tag/:tag" element={<GenrePage />} />
+                        <Route path="genre/:genre" element={<GenrePage />} />
+                        <Route path="search" element={<SearchPage />} />
+                        <Route path="*" element={<PageNotFound />} />
                     </Route>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/sign-up" element={<SignUpPage />} />
-                    <Route path="*" element={<PageNotFound />} />
                 </Routes>
             ) : (
                 <Routes>

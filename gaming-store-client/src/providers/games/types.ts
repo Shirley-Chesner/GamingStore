@@ -19,4 +19,8 @@ export interface Genre {
     gamesCount: number;
 }
 
+export interface GenreDetails extends Genre {
+    description: string;
+}
+
 export const beep = 8;

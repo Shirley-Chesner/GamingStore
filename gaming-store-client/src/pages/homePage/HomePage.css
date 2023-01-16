@@ -6,6 +6,13 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1em;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.home-page .top-games-carousel .carousel {
+    height: 35em;
 }
 
 .home-page .home-page-games {

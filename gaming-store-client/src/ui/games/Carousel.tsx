@@ -16,9 +16,11 @@ interface Item {
 interface Props {
     items: Item[];
     title: string;
+    className?: string;
     itemsInOneSlider?: number;
     autoSlide?: boolean;
     isLoading?: boolean;
+    onClickItem?: (id: number) => void;
 }
 
 type SlideDirection = 'prev' | 'next';
@@ -29,6 +31,8 @@ export const Carousel: FC<Props> = ({
     autoSlide,
     title,
     isLoading,
+    className,
+    onClickItem,
 }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [nextSlide, setNextSlide] = useState(-1);
@@ -96,7 +100,7 @@ export const Carousel: FC<Props> = ({
     }, [autoSlide, slideWithAnimation]);
 
     return (
-        <div className="carousel-wrapper">
+        <div className={classNames('carousel-wrapper', className)}>
             <h1 className="carousel-title">{title}</h1>
             <div className="carousel">
                 {isLoading ? (
@@ -117,6 +121,7 @@ export const Carousel: FC<Props> = ({
                                     key={item.id}
                                     {...item}
                                     width={100 / itemsInOneSlider}
+                                    onClick={onClickItem}
                                 />
                             ))}
                         </div>
@@ -160,9 +165,16 @@ const CarouselArrowIcon: FC<ArrowIconProps> = ({ type, onClick }) => {
     );
 };
 
-const CarouselItem: FC<Item & { width: number }> = ({ width, id, name, imageUrl }) => {
+const CarouselItem: FC<Item & { width: number }> = ({ width, id, name, imageUrl, onClick }) => {
+    const handleClick = useCallback(() => onClick?.(id), [id, onClick]);
+
     return (
-        <div className="carousel-item" style={{ width: `${width}%` }} key={id}>
+        <div
+            className={classNames('carousel-item', { click: !!onClick })}
+            onClick={handleClick}
+            style={{ width: `${width}%` }}
+            key={id}
+        >
             <h2 className="item-name">{name}</h2>
             <img className="item-img" src={imageUrl} />
         </div>
