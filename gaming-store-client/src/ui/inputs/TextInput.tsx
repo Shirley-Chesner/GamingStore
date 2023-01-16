@@ -1,7 +1,6 @@
 import TextField from '@mui/material/TextField';
 import React, { FC, HTMLInputTypeAttribute, useCallback } from 'react';
 import classNames from 'classnames';
-import { InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 interface Props {
@@ -10,6 +9,7 @@ interface Props {
     title?: string;
     outline?: boolean;
     className?: string;
+    addSearchIcon?: boolean;
     onChange?: (value: string) => void;
 }
 
@@ -20,6 +20,7 @@ export const TextInput: FC<Props> = ({
     value,
     title,
     outline,
+    addSearchIcon,
 }) => {
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,8 +36,14 @@ export const TextInput: FC<Props> = ({
             value={value}
             onChange={handleChange}
             type={type}
-            variant={!outline ? 'standard' : undefined}       
-            InputProps={{ startAdornment:(<InputAdornment position="end"><SearchIcon/></InputAdornment>),}}
+            variant={!outline ? 'standard' : undefined}
+            InputProps={
+                addSearchIcon
+                    ? {
+                          endAdornment: <SearchIcon />,
+                      }
+                    : undefined
+            }
         />
     );
 };

@@ -90,7 +90,7 @@ export const SearchPage: React.FC = () => {
                 </Grid>
                 <Grid item xs={10} className="searchContent">
                     <div className="searchArea">
-                       <TextInput className="searchBar" title="Search" outline  onChange={(value) => nameSearchVal.current = value}/> 
+                       <TextInput className="searchBar" title="Search" outline addSearchIcon onChange={(value) => nameSearchVal.current = value}/> 
                        <Button onClick={onSearch}>Search</Button>
                     </div>
                     <SearchResults searchedGames={results}/> 
