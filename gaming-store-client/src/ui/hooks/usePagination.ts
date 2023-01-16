@@ -24,6 +24,7 @@ export function usePageination<T>(url: string, parseResult?: (value: any) => T) 
 
                 const newResults = parseResult ? res.results?.map(parseResult) : res.results;
                 setResults((prev) => [...prev, ...newResults]);
+                setError(undefined);
             } catch (e) {
                 console.error(e);
                 setError('error has happend');
