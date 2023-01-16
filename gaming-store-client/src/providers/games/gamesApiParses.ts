@@ -1,4 +1,4 @@
-import { BaseGame } from './types';
+import { BaseGame, Genre } from './types';
 
 export function parseToBaseGame(game: any): BaseGame {
     return {
@@ -8,5 +8,14 @@ export function parseToBaseGame(game: any): BaseGame {
         name: game.name,
         rating: game.rating,
         metacritic: game.metacritic,
+    };
+}
+
+export function parseToGenre(genre: any): Genre {
+    return {
+        id: genre.id,
+        imageUrl: genre.image_background,
+        name: genre.name,
+        gamesCount: genre.games_count,
     };
 }

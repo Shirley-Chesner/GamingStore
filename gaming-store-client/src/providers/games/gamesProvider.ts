@@ -1,4 +1,4 @@
-import { parseToBaseGame } from './gamesApiParses';
+import { parseToBaseGame, parseToGenre } from './gamesApiParses';
 
 // TODO: move this to secure place
 const API_KEY = 'd4687bc2b72c4bd281670ceae4e8c209';
@@ -25,6 +25,12 @@ export async function searchGames(tags = '', genres = '') {
     return res?.results ? res.results.map(parseToBaseGame) : [];
 }
 
+export async function getGenres(tags = false) {
+    const res = await _fetch(tags ? 'tags' : 'genres', tags ? { page_size: 80 } : undefined);
+
+    return res?.results ? res.results.map(parseToGenre) : [];
+}
+
 type Ordering = 'name' | 'released' | 'added' | 'created' | 'updated' | 'rating' | 'metacritic';
 
 interface GameQuery {
@@ -44,7 +50,7 @@ export interface ApiReturnType<T> {
     results: T[];
 }
 
-type Prefix = 'games';
+type Prefix = 'games' | 'genres' | 'tags';
 
 async function _fetch<T>(prefix: Prefix, query?: GameQuery) {
     return await fetchFromUrl<T>(getUrl(prefix, query));

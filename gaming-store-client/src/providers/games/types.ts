@@ -12,4 +12,11 @@ export interface Game extends BaseGame {
     ratingsCount: number;
 }
 
+export interface Genre {
+    id: number;
+    name: string;
+    imageUrl: string;
+    gamesCount: number;
+}
+
 export const beep = 8;

@@ -9,6 +9,7 @@ export function usePageination<T>(url: string, parseResult?: (value: any) => T) 
     const [results, setResults] = useState<T[]>([]);
 
     const nextUrl = useRef<string>('');
+    const isDataFetched = useRef(false);
 
     const loadResults = useCallback(
         async (firstTime = false) => {
@@ -44,7 +45,8 @@ export function usePageination<T>(url: string, parseResult?: (value: any) => T) 
     );
 
     useEffect(() => {
-        loadResults(true);
+        if (!isDataFetched.current) loadResults(true);
+        isDataFetched.current = true;
     }, []);
 
     return { isLoading, error, results, onScroll };
