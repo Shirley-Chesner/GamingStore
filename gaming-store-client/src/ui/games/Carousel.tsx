@@ -20,6 +20,7 @@ interface Props {
     itemsInOneSlider?: number;
     autoSlide?: boolean;
     isLoading?: boolean;
+    randomColors?: boolean;
     onClickItem?: (id: number) => void;
 }
 
@@ -32,6 +33,7 @@ export const Carousel: FC<Props> = ({
     title,
     isLoading,
     className,
+    randomColors,
     onClickItem,
 }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -116,12 +118,14 @@ export const Carousel: FC<Props> = ({
                 ) : (
                     itemsMatrix.map((items, index) => (
                         <div className={getSlideClassNames(index)} key={index}>
-                            {items.map((item) => (
+                            {items.map((item, index) => (
                                 <CarouselItem
                                     key={item.id}
+                                    index={index}
                                     {...item}
                                     width={100 / itemsInOneSlider}
                                     onClick={onClickItem}
+                                    randomColors={randomColors}
                                 />
                             ))}
                         </div>
@@ -165,7 +169,28 @@ const CarouselArrowIcon: FC<ArrowIconProps> = ({ type, onClick }) => {
     );
 };
 
-const CarouselItem: FC<Item & { width: number }> = ({ width, id, name, imageUrl, onClick }) => {
+const COLORS = [
+    'rgba(0, 145, 110, 0.4)',
+    'rgba(255, 207, 0, 0.4)',
+    'rgba(238, 97, 35, 0.4)',
+    'rgba(250, 0, 63, 0.4)',
+];
+
+type CarouselItemProps = Item & {
+    width: number;
+    index: number;
+    randomColors?: boolean;
+};
+
+const CarouselItem: FC<CarouselItemProps> = ({
+    width,
+    id,
+    name,
+    index,
+    imageUrl,
+    randomColors,
+    onClick,
+}) => {
     const handleClick = useCallback(() => onClick?.(id), [id, onClick]);
 
     return (
@@ -175,7 +200,12 @@ const CarouselItem: FC<Item & { width: number }> = ({ width, id, name, imageUrl,
             style={{ width: `${width}%` }}
             key={id}
         >
-            <h2 className="item-name">{name}</h2>
+            <h2
+                className="item-name"
+                style={randomColors ? { backgroundColor: COLORS[index % 4] } : undefined}
+            >
+                {name}
+            </h2>
             <img className="item-img" src={imageUrl} />
         </div>
     );

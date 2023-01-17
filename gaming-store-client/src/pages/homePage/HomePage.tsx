@@ -55,6 +55,7 @@ export const HomePage: FC = () => {
                 itemsInOneSlider={4}
                 autoSlide
                 isLoading={loadingGenres}
+                randomColors
                 onClickItem={goToGenrePage}
             />
             <Carousel
@@ -63,6 +64,7 @@ export const HomePage: FC = () => {
                 itemsInOneSlider={4}
                 autoSlide
                 isLoading={loadingTags}
+                randomColors
                 onClickItem={goToTagPage}
             />
             <Carousel
@@ -71,6 +73,7 @@ export const HomePage: FC = () => {
                 itemsInOneSlider={4}
                 autoSlide
                 isLoading={loadingPlatforms}
+                randomColors
                 onClickItem={goToPlatformPage}
             />
             <GamesList

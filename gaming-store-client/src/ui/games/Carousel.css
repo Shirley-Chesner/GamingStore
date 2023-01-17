@@ -103,7 +103,7 @@
 
 /* hover over item */
 .carousel-item:hover .item-name {
-    background-color: rgba(60, 74, 148, 0.3);
+    background-color: rgba(60, 74, 148, 0.3) !important;
     background-image: none;
     transform: scale(1.3);
 }
