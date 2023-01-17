@@ -15,7 +15,7 @@ interface Item {
 
 interface Props {
     items: Item[];
-    title: string;
+    title: React.ReactNode;
     className?: string;
     itemsInOneSlider?: number;
     autoSlide?: boolean;

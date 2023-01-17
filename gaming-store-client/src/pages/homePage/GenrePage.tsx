@@ -1,22 +1,33 @@
 import './HomePage.css';
 
 import { FC } from 'react';
+import { useParams } from 'react-router-dom';
+import { Skeleton } from '@mui/material';
 
 import { parseToBaseGame } from '../../providers';
 import { getGames, getGamesUrl, getGenreDetails } from '../../providers/games/gamesProvider';
-import { Carousel, GameDetails, usePageination, useFetch } from '../../ui';
-import { useParams } from 'react-router-dom';
+import { Carousel, usePageination, useFetch } from '../../ui';
+import { GamesList } from '../../ui/games/GamesList';
 
 export const GenrePage: FC = () => {
-    const { genre, tag } = useParams();
+    const { genre, tag, platform } = useParams();
 
     const { value: genreDetails } = useFetch(
-        () => getGenreDetails(genre || tag || '', !!tag),
+        () =>
+            getGenreDetails(
+                genre || tag || platform || '',
+                tag ? 'tags' : platform ? 'platforms' : 'genres',
+            ),
         undefined,
     );
 
-    const { onScroll, results: games } = usePageination(
-        getGamesUrl({ genres: genre, tags: tag }),
+    const {
+        onScroll,
+        results: games,
+        isLoading: loadingGames,
+        loadMore,
+    } = usePageination(
+        getGamesUrl({ genres: genre, tags: tag, platforms: platform }),
         parseToBaseGame,
     );
 
@@ -26,15 +37,34 @@ export const GenrePage: FC = () => {
                 page_size: 10,
                 genres: genre,
                 tags: tag,
+                platforms: platform,
             }),
         [],
     );
 
-    if (!genreDetails) return <div>loading...</div>;
+    if (!genreDetails)
+        return (
+            <div className="home-page">
+                <Skeleton className="main-title" variant="text" width="100%" height="3em" />
+                <Skeleton
+                    className="home-page-description"
+                    variant="text"
+                    width="100%"
+                    height="10em"
+                />
+                <Carousel
+                    title={<Skeleton variant="text" width="50%" height="3em" />}
+                    items={[]}
+                    isLoading
+                    className="top-games-carousel"
+                />
+            </div>
+        );
 
     return (
         <div
             className="home-page"
+            onScroll={onScroll}
             style={{ backgroundImage: getBackgroundImage(genreDetails.imageUrl) }}
         >
             <h1 className="main-title">{genreDetails.name.toUpperCase()} GAMES</h1>
@@ -49,12 +79,12 @@ export const GenrePage: FC = () => {
                 autoSlide
                 isLoading={loadingTopGames}
             />
-            <h1>Top Games</h1>
-            <div className="home-page-games" onScroll={onScroll}>
-                {games.map((game, index) => (
-                    <GameDetails key={`${game.id}|${index}`} {...game} />
-                ))}
-            </div>
+            <GamesList
+                title="Top Games"
+                games={games}
+                isLoading={loadingGames}
+                loadMore={loadMore}
+            />
         </div>
     );
 };

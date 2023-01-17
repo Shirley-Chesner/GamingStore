@@ -27,18 +27,31 @@ export async function getGames(query: GameQuery = {}) {
     return res.results ? res.results.map(parseToBaseGame) : [];
 }
 
-export async function getGenres(tags = false) {
-    const res = await _fetch(tags ? 'tags' : 'genres', tags ? { page_size: 80 } : undefined);
+export async function getGenres(type: Data = 'genres') {
+    const res = await _fetch(
+        type,
+        type !== 'genres'
+            ? { page_size: 80, ...(type === 'platforms' ? { ordering: '-games_count' } : {}) }
+            : undefined,
+    );
 
     return res?.results ? res.results.map(parseToGenre) : [];
 }
 
-export async function getGenreDetails(id: number | string, isTag = false) {
-    const res = await _fetch(`${isTag ? 'tags' : 'genres'}/${id}`);
+export async function getGenreDetails(id: number | string, type: Data = 'genres') {
+    const res = await _fetch(`${type}/${id}`);
     return res ? parseToGenreDetails(res) : undefined;
 }
 
-type Ordering = 'name' | 'released' | 'added' | 'created' | 'updated' | 'rating' | 'metacritic';
+type Ordering =
+    | 'name'
+    | 'released'
+    | 'added'
+    | 'created'
+    | 'updated'
+    | 'rating'
+    | 'metacritic'
+    | 'games_count';
 
 interface GameQuery {
     page?: number;
@@ -49,6 +62,7 @@ interface GameQuery {
     ordering?: Ordering | `-${Ordering}`;
     tags?: string;
     genres?: string;
+    platforms?: string;
 }
 
 export interface ApiReturnType<T> {
@@ -58,7 +72,9 @@ export interface ApiReturnType<T> {
     results: T[];
 }
 
-type Prefix = 'games' | 'genres' | 'tags' | string;
+type Data = 'genres' | 'tags' | 'platforms';
+
+type Prefix = 'games' | Data | string;
 
 async function _fetch<T>(prefix: Prefix, query?: GameQuery) {
     return await fetchFromUrl<T>(getUrl(prefix, query));

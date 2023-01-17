@@ -50,5 +50,5 @@ export function usePageination<T>(url: string, parseResult?: (value: any) => T) 
         isDataFetched.current = true;
     }, []);
 
-    return { isLoading, error, results, onScroll };
+    return { isLoading, error, results, onScroll, loadMore: () => loadResults() };
 }

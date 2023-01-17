@@ -1,4 +1,5 @@
 .navbar {
+    height: 5%;
     padding: 1.5em 2em;
     display: flex;
     flex-direction: row;

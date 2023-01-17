@@ -22,6 +22,7 @@ export const Router: FC = () => {
                         <Route index element={<HomePage />} />
                         <Route path="tag/:tag" element={<GenrePage />} />
                         <Route path="genre/:genre" element={<GenrePage />} />
+                        <Route path="platform/:platform" element={<GenrePage />} />
                         <Route path="search" element={<SearchPage />} />
                         <Route path="*" element={<PageNotFound />} />
                     </Route>

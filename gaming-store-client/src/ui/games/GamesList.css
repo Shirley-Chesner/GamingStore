@@ -1,0 +1,11 @@
+.games-list-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.games-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}

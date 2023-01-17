@@ -4,15 +4,25 @@ import { FC, useCallback } from 'react';
 
 import { parseToBaseGame } from '../../providers';
 import { getGames, getGamesUrl, getGenres } from '../../providers/games/gamesProvider';
-import { Carousel, GameDetails, usePageination, useFetch } from '../../ui';
+import { Carousel, usePageination, useFetch } from '../../ui';
 import { useNavigate } from 'react-router-dom';
+import { GamesList } from '../../ui/games/GamesList';
 
 export const HomePage: FC = () => {
     const navigate = useNavigate();
 
-    const { onScroll, results: games } = usePageination(getGamesUrl(), parseToBaseGame);
+    const {
+        onScroll,
+        loadMore,
+        results: games,
+        isLoading: loadingGames,
+    } = usePageination(getGamesUrl({ search: 'god' }), parseToBaseGame);
     const { value: genres, isLoading: loadingGenres } = useFetch(getGenres, []);
-    const { value: tags, isLoading: loadingTags } = useFetch(() => getGenres(true), []);
+    const { value: tags, isLoading: loadingTags } = useFetch(() => getGenres('tags'), []);
+    const { value: platforms, isLoading: loadingPlatforms } = useFetch(
+        () => getGenres('platforms'),
+        [],
+    );
     const { value: topGames, isLoading: loadingTopGames } = useFetch(
         () => getGames({ page_size: 10 }),
         [],
@@ -26,8 +36,12 @@ export const HomePage: FC = () => {
         navigate(`tag/${id}`);
     }, []);
 
+    const goToPlatformPage = useCallback((id: number) => {
+        navigate(`platform/${id}`);
+    }, []);
+
     return (
-        <div className="home-page">
+        <div className="home-page" onScroll={onScroll}>
             <Carousel
                 className="top-games-carousel"
                 title="Top Games"
@@ -51,12 +65,20 @@ export const HomePage: FC = () => {
                 isLoading={loadingTags}
                 onClickItem={goToTagPage}
             />
-            <h1>Top Games</h1>
-            <div className="home-page-games" onScroll={onScroll}>
-                {games.map((game, index) => (
-                    <GameDetails key={`${game.id}|${index}`} {...game} />
-                ))}
-            </div>
+            <Carousel
+                title="Platforms"
+                items={platforms}
+                itemsInOneSlider={4}
+                autoSlide
+                isLoading={loadingPlatforms}
+                onClickItem={goToPlatformPage}
+            />
+            <GamesList
+                title="Top Games"
+                games={games}
+                isLoading={loadingGames}
+                loadMore={loadMore}
+            />
         </div>
     );
 };

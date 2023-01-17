@@ -1,7 +1,6 @@
 .home-page {
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
@@ -9,17 +8,9 @@
     background-position: top;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 84%;
 }
 
 .home-page .top-games-carousel .carousel {
     height: 35em;
-}
-
-.home-page .home-page-games {
-    max-height: 80vh;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    overflow-y: auto;
 }
