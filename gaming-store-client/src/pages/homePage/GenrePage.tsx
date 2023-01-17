@@ -68,7 +68,7 @@ export const GenrePage: FC = () => {
             style={{ backgroundImage: getBackgroundImage(genreDetails.imageUrl) }}
         >
             <h1 className="main-title">{genreDetails.name.toUpperCase()} GAMES</h1>
-            <p
+            <span
                 className="home-page-description"
                 dangerouslySetInnerHTML={{ __html: genreDetails.description }}
             />

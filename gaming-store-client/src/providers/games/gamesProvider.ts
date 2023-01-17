@@ -27,7 +27,7 @@ export async function getGames(query: GameQuery = {}) {
     return res.results ? res.results.map(parseToBaseGame) : [];
 }
 
-export async function getGenres(type: Data = 'genres') {
+export async function getGenres(type: ExtraData = 'genres') {
     const res = await _fetch(
         type,
         type !== 'genres'
@@ -38,7 +38,7 @@ export async function getGenres(type: Data = 'genres') {
     return res?.results ? res.results.map(parseToGenre) : [];
 }
 
-export async function getGenreDetails(id: number | string, type: Data = 'genres') {
+export async function getGenreDetails(id: number | string, type: ExtraData = 'genres') {
     const res = await _fetch(`${type}/${id}`);
     return res ? parseToGenreDetails(res) : undefined;
 }
@@ -63,6 +63,7 @@ interface GameQuery {
     tags?: string;
     genres?: string;
     platforms?: string;
+    dates?: Date[];
 }
 
 export interface ApiReturnType<T> {
@@ -72,9 +73,9 @@ export interface ApiReturnType<T> {
     results: T[];
 }
 
-type Data = 'genres' | 'tags' | 'platforms';
+export type ExtraData = 'genres' | 'tags' | 'platforms';
 
-type Prefix = 'games' | Data | string;
+type Prefix = 'games' | ExtraData | string;
 
 async function _fetch<T>(prefix: Prefix, query?: GameQuery) {
     return await fetchFromUrl<T>(getUrl(prefix, query));
@@ -107,8 +108,16 @@ export async function fetchFromUrl<T>(url: string): Promise<ApiReturnType<T>> {
 function _queryToString(query?: GameQuery): string {
     if (!query) return '';
 
-    return Object.entries(query).reduce(
-        (prev, [key, value]) => (value ? `${prev}&${key}=${value}` : prev),
-        '',
-    );
+    return Object.entries(query).reduce((prev, [key, value]) => {
+        if (!value) return prev;
+
+        let paresdValue = value;
+
+        if (Array.isArray(value)) {
+            if (!value.length || !(value[0] instanceof Date)) return prev;
+            paresdValue = value.map((date) => (date as Date).toISOString().split('T')[0]).join();
+        }
+
+        return `${prev}&${key}=${paresdValue}`;
+    }, '');
 }

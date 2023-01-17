@@ -3,42 +3,23 @@ import './HomePage.css';
 import { FC, useCallback } from 'react';
 
 import { parseToBaseGame } from '../../providers';
-import { getGames, getGamesUrl, getGenres } from '../../providers/games/gamesProvider';
-import { Carousel, usePageination, useFetch } from '../../ui';
+import { ExtraData, getGames, getGamesUrl, getGenres } from '../../providers/games/gamesProvider';
+import { Carousel, usePageination, useFetch, capitalize } from '../../ui';
 import { useNavigate } from 'react-router-dom';
 import { GamesList } from '../../ui/games/GamesList';
 
 export const HomePage: FC = () => {
-    const navigate = useNavigate();
-
     const {
         onScroll,
         loadMore,
         results: games,
         isLoading: loadingGames,
-    } = usePageination(getGamesUrl({ search: 'god' }), parseToBaseGame);
-    const { value: genres, isLoading: loadingGenres } = useFetch(getGenres, []);
-    const { value: tags, isLoading: loadingTags } = useFetch(() => getGenres('tags'), []);
-    const { value: platforms, isLoading: loadingPlatforms } = useFetch(
-        () => getGenres('platforms'),
-        [],
-    );
+    } = usePageination(getGamesUrl(), parseToBaseGame);
+
     const { value: topGames, isLoading: loadingTopGames } = useFetch(
         () => getGames({ page_size: 10 }),
         [],
     );
-
-    const goToGenrePage = useCallback((id: number) => {
-        navigate(`genre/${id}`);
-    }, []);
-
-    const goToTagPage = useCallback((id: number) => {
-        navigate(`tag/${id}`);
-    }, []);
-
-    const goToPlatformPage = useCallback((id: number) => {
-        navigate(`platform/${id}`);
-    }, []);
 
     return (
         <div className="home-page" onScroll={onScroll}>
@@ -49,32 +30,12 @@ export const HomePage: FC = () => {
                 autoSlide
                 isLoading={loadingTopGames}
             />
-            <Carousel
-                title="Genres"
-                items={genres}
-                itemsInOneSlider={4}
-                autoSlide
-                isLoading={loadingGenres}
-                randomColors
-                onClickItem={goToGenrePage}
-            />
-            <Carousel
-                title="Tags"
-                items={tags}
-                itemsInOneSlider={4}
-                autoSlide
-                isLoading={loadingTags}
-                randomColors
-                onClickItem={goToTagPage}
-            />
-            <Carousel
-                title="Platforms"
-                items={platforms}
-                itemsInOneSlider={4}
-                autoSlide
-                isLoading={loadingPlatforms}
-                randomColors
-                onClickItem={goToPlatformPage}
+            <GenericCarousel type="genres" />
+            <GenericCarousel type="tags" />
+            <GenericCarousel type="platforms" />
+            <BasicCarousel
+                name="new this week"
+                getValue={() => getGames({ dates: _getWeekDates(), page_size: 12 })}
             />
             <GamesList
                 title="Top Games"
@@ -84,4 +45,41 @@ export const HomePage: FC = () => {
             />
         </div>
     );
+};
+
+const GenericCarousel: FC<{ type: ExtraData }> = ({ type }) => {
+    const navigate = useNavigate();
+
+    const onClick = useCallback((id: number) => {
+        navigate(`${type}/${id}`);
+    }, []);
+
+    return <BasicCarousel name={type} getValue={() => getGenres(type)} onClick={onClick} />;
+};
+
+interface BasicProps {
+    name: string;
+    getValue: () => Promise<any>;
+    onClick?: (id: number) => void;
+}
+
+const BasicCarousel: FC<BasicProps> = ({ name, getValue, onClick }) => {
+    const { value, isLoading } = useFetch(() => getValue(), []);
+    return (
+        <Carousel
+            title={capitalize(name)}
+            items={value}
+            itemsInOneSlider={4}
+            autoSlide
+            isLoading={isLoading}
+            randomColors
+            onClickItem={onClick}
+        />
+    );
+};
+
+const _getWeekDates = () => {
+    const now = new Date();
+
+    return [new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000), now];
 };
