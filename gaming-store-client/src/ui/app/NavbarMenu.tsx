@@ -29,7 +29,7 @@ export const NavbarMenu: FC<PropsWithChildren> = ({ children }) => {
                     <MenuItem onClick={() => onClose('/search')}>
                         <span>Search Games</span>
                     </MenuItem>
-                    <MenuItem onClick={() => onClose()}>
+                    <MenuItem onClick={() => onClose('/cart')}>
                         <span>View Cart</span>
                     </MenuItem>
                     <MenuItem onClick={() => onClose()}>

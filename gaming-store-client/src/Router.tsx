@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
+import { CartPage } from './pages/cartPage/CartPage';
 import { GenrePage } from './pages/homePage/GenrePage';
 
 import { HomePage } from './pages/homePage/HomePage';
@@ -23,6 +24,7 @@ export const Router: FC = () => {
                         <Route path="tag/:tag" element={<GenrePage />} />
                         <Route path="genre/:genre" element={<GenrePage />} />
                         <Route path="platform/:platform" element={<GenrePage />} />
+                        <Route path="cart" element={<CartPage />} />
                         <Route path="search" element={<SearchPage />} />
                         <Route path="*" element={<PageNotFound />} />
                     </Route>
