@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import './SearchPage.css'
 
 import { TextInput } from "./../../ui/inputs/TextInput"
@@ -11,9 +11,9 @@ import { searchGames } from '../../providers/games/gamesProvider';
 import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
 
 export const SearchPage: React.FC = () => {
-    const priceVal = React.useRef<number>(0);
-    const ratingVal = React.useRef<number>(-1);
-    const nameSearchVal = React.useRef<string>("");
+    const [priceVal, setPriceVal] = React.useState(0);
+    const [ratingVal, setRatingVal] = React.useState(-1);
+    const [nameSearchVal, setNameSearchVal] = React.useState("");
     const [tagsVal, setTagsVal] = React.useState<string[]>([]);
     const [genreVal, setGenreVal] = React.useState<string[]>([]);
     const [results, setResults] = React.useState<BaseGame[]>([]);
@@ -23,32 +23,29 @@ export const SearchPage: React.FC = () => {
     }
 
     const onPriceChange = (value: number) => {
-        // DOTO: Price will be added when the games are pushed into the DB
-        priceVal.current = value as number;
+        // TODO: Price will be added when the games are pushed into the DB
+        setPriceVal(value)
     }
 
     const onRatingChange = async (value: number) => {
-        ratingVal.current = value;
-        await updateSearchedGames();
-
+        setRatingVal(value)
     }
 
     const updateSearchedGames = async () => {
-        console.log(nameSearchVal);
-        if (tagsVal.length == 0 && genreVal.length == 0 && ratingVal.current == -1 && nameSearchVal.current == "") {
+        if (tagsVal.length === 0 && genreVal.length === 0 && ratingVal === -1 && nameSearchVal === "") {
             setResults([]);
         } else {
             let newSearchedGames = await searchGames(tagsVal.join(), genreVal.join());           
-            if (ratingVal.current != -1) {
+            if (ratingVal !== -1) {
                 newSearchedGames = newSearchedGames.filter((game: BaseGame) => { 
-                    if (game.rating <= ratingVal.current && game.rating > ratingVal.current - 1) 
+                    if (game.rating <= ratingVal && game.rating > ratingVal - 1) 
                         return game;
                 }) 
             }
-            if (nameSearchVal.current != "") {
+            if (nameSearchVal !== "") {
                 newSearchedGames = newSearchedGames.filter((game: BaseGame) => {
                     console.log(game.name);
-                    if (game.name.toLowerCase().includes(nameSearchVal.current.toLowerCase())) 
+                    if (game.name.toLowerCase().includes(nameSearchVal.toLowerCase())) 
                         return game;
                 })
             }
@@ -57,7 +54,7 @@ export const SearchPage: React.FC = () => {
 
     }
 
-    const onTagsChange = async (tagName: string, isChecked: boolean) => {
+    const onTagsChange = (tagName: string, isChecked: boolean) => {
         const newVals = [...tagsVal];
         if (isChecked) {
             newVals.push(tagName);
@@ -65,10 +62,9 @@ export const SearchPage: React.FC = () => {
             newVals.splice(tagsVal.indexOf(tagName), 1);
         }
         setTagsVal(newVals);
-        await updateSearchedGames();
     }
 
-    const onGenreChange = async (tagName: string, isChecked: boolean) => {
+    const onGenreChange = (tagName: string, isChecked: boolean) => {
         const newVals = [...genreVal];
         if (isChecked) {
             newVals.push(tagName);
@@ -76,8 +72,11 @@ export const SearchPage: React.FC = () => {
             newVals.splice(genreVal.indexOf(tagName), 1);
         }
         setGenreVal(newVals);
-        await updateSearchedGames();
     }
+
+    useEffect(() => {
+        updateSearchedGames();
+    }, [genreVal, tagsVal, priceVal, ratingVal, nameSearchVal])
 
     return (
         <div className="search-page">
@@ -90,7 +89,7 @@ export const SearchPage: React.FC = () => {
                 </Grid>
                 <Grid item xs={10} className="searchContent">
                     <div className="searchArea">
-                       <TextInput className="searchBar" title="Search" outline addSearchIcon onChange={(value) => nameSearchVal.current = value}/> 
+                       <TextInput className="searchBar" title="Search" outline addSearchIcon onChange={setNameSearchVal}/> 
                        <Button onClick={onSearch}>Search</Button>
                     </div>
                     <SearchResults searchedGames={results}/> 
