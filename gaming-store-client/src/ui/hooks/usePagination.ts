@@ -3,7 +3,11 @@ import { fetchFromUrl } from '../../providers';
 
 const DISTANCE_FROM_BOTTOM = 100;
 
-export function usePageination<T>(url: string, parseResult?: (value: any) => T) {
+export function usePageination<T>(
+    url: string,
+    parseResult?: (value: any) => T,
+    filterResult?: (result: T) => boolean,
+) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
     const [results, setResults] = useState<T[]>([]);
@@ -22,8 +26,12 @@ export function usePageination<T>(url: string, parseResult?: (value: any) => T) 
 
                 nextUrl.current = res.next;
 
-                const newResults = parseResult ? res.results?.map(parseResult) : res.results;
-                setResults((prev) => [...prev, ...newResults]);
+                const parsedResults = parseResult ? res.results?.map(parseResult) : res.results;
+                const filteredResults = filterResult
+                    ? parsedResults?.filter(filterResult)
+                    : parsedResults;
+
+                setResults((prev) => [...prev, ...filteredResults]);
                 setError(undefined);
             } catch (e) {
                 console.error(e);
