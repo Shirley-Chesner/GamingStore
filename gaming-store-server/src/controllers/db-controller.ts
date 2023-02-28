@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { comment, game, user } from "../data/db-type";
+import { comment, game, user, adminInfo } from "../data/db-type";
 
 export class dbController {
 
@@ -7,11 +7,12 @@ export class dbController {
     static commentModal: mongoose.Model<any, unknown, unknown, unknown, any>;
     static gameModal: mongoose.Model<any, unknown, unknown, unknown, any>;
     static userModal: mongoose.Model<any, unknown, unknown, unknown, any>;
+    static adminInfoModal: mongoose.Model<any, unknown, unknown, unknown, any>;
 
     static connectToDB(dbHostname: string) {
         // Connecting to db
         mongoose.set('strictQuery', false);
-        mongoose.set('debug', true);
+        // mongoose.set('debug', true);
         mongoose.connect(dbHostname);
         dbController.connection = mongoose.connection;
 
@@ -19,10 +20,23 @@ export class dbController {
         const commentSchema = new mongoose.Schema(comment);
         const gameSchema = new mongoose.Schema(game);
         const userSchema = new mongoose.Schema(user);
+        const adminInfoSchema = new mongoose.Schema(adminInfo);
         
         dbController.commentModal = mongoose.model('comments', commentSchema);
         dbController.gameModal = mongoose.model('games', gameSchema);
         dbController.userModal = mongoose.model('users', userSchema);
+        dbController.adminInfoModal = mongoose.model('adminInfo', adminInfoSchema);
+        
+        // Initalize the admin info 
+        // dbController.initalizeAdminInfo().then();
+    }
+
+    static async initalizeAdminInfo() {
+        const newInfo = new dbController.adminInfoModal({
+            current_users: 0,
+            earning: 0
+        })
+        await newInfo.save();
     }
 
     static async insertComment(commentId: number, gameID: number, userID: Number, comment: String) {
@@ -49,14 +63,30 @@ export class dbController {
         await newUser.save();
     }
 
-    static async insertGame(gameID: Number, price: Number) {
+    static async insertGame(gameID: Number, price: Number, rating: Number) {
         const newGame = new dbController.gameModal({ 
             game_id: gameID,
             price: price,
-            rating: 0,
+            rating: rating,
             comments: [],
             how_many_bought: 0});
         await newGame.save();
+    }
+
+    static async addCurrentUsers() {
+        const currentInfo = await dbController.getAdminInfo();
+        await dbController.commentModal.updateOne({current_users: currentInfo.current_users + 1});
+    }
+
+    static async removeCurrentUsers() {
+        const currentInfo = await dbController.getAdminInfo();
+        let newCount;
+        if (currentInfo.current_users <= 0) {
+            newCount = 0;
+        } else {
+            newCount = currentInfo.current_users - 1;
+        }
+        await dbController.commentModal.updateOne({current_users: newCount});
     }
 
     static async updateComment(commentID: number, update: any, isUpdateArray: boolean = false  ) {
@@ -125,6 +155,14 @@ export class dbController {
             })
     }
 
+    static async getAdminInfo(condition: {} = {}) {
+        const adminInfoRaw = await dbController.adminInfoModal.find(condition).exec().then();
+        return {
+            current_users:  adminInfoRaw[0].current_users,
+            earning: adminInfoRaw[0].earning
+        }
+    }
+
     static async getComments(condition: {} = {}) {
         const commentsRaw = await dbController.commentModal.find(condition).exec().then();
         let comments: any[] = [];
@@ -162,6 +200,15 @@ export class dbController {
 
     static async deleteUser(userId: number) {
         await dbController.userModal.deleteOne({user_id: userId});
+    }
+
+    static async getHighestOfGames(condition: string, limit: number = 1) {
+        const gamesRaw = await dbController.gameModal.find().sort({condition: -1}).limit(limit);
+        let games: any[] = [];
+        gamesRaw.forEach(function(doc: any) {
+            games.push(dbController.getGameInFormat(doc))
+        })
+        return games;
     }
 }
 

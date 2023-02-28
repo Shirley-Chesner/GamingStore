@@ -53,7 +53,7 @@ dbRoute.post('/comments', (req: Request, res: Response) => {
 
 dbRoute.post('/games', (req: Request, res: Response) => {
     const newGame = req.body;
-    dbController.insertGame(newGame.gameID, newGame.price).then(() => {
+    dbController.insertGame(newGame.gameID, newGame.price, newGame.rating).then(() => {
         res.status(StatusCodes.OK);
         res.send("A new game was added!")
     }).catch((e) => {
