@@ -27,6 +27,12 @@ export async function getGames(query: GameQuery = {}) {
     return res.results ? res.results.map(parseToBaseGame) : [];
 }
 
+export async function getGameById(id: number) {
+    const url = `${API_URL}games/${id}?key=${API_KEY}`;
+    const res = await fetchFromUrl(url);
+    return res ? parseToBaseGame(res) : null;
+}
+
 export async function getGenres(type: ExtraData = 'genres') {
     const res = await _fetch(
         type,
@@ -54,6 +60,7 @@ type Ordering =
     | 'games_count';
 
 interface GameQuery {
+    id?: number;
     page?: number;
     page_size?: number;
     search?: string;
@@ -97,7 +104,7 @@ export async function fetchFromUrl<T>(url: string): Promise<ApiReturnType<T>> {
         if (!response.ok) throw `not ok!! ${response.status}`;
 
         const json = await response.json();
-        console.log('🚀 ~ file: gamesProvider.ts:38 ~ json', json);
+        // console.log('🚀 ~ file: gamesProvider.ts:38 ~ json', json);
         return json;
     } catch (e) {
         console.log('🚀 ~ file: gamesProvider.ts:15 ~ _fetch ~ e', e);

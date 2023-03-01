@@ -29,7 +29,6 @@ async function script() {
         })
     })
     await Promise.all(res)
-    console.log('help me');
 }
 
 script();
