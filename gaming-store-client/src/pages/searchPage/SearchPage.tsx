@@ -6,9 +6,9 @@ import { SearchCards } from "./SearchCards"
 import { SearchResults } from "./SearchResults"
 
 import { Button, Grid }  from '@mui/material';
-import { BaseGame } from "../../providers";
-import { searchGames } from '../../providers/games/gamesProvider';
-import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
+import { BaseGame, parseToBaseGame } from "../../providers";
+import { getGamesUrl, searchGames } from '../../providers/games/gamesProvider';
+import { usePageination } from "../../ui";
 
 export const SearchPage: React.FC = () => {
     const [priceVal, setPriceVal] = React.useState(0);
@@ -17,6 +17,34 @@ export const SearchPage: React.FC = () => {
     const [tagsVal, setTagsVal] = React.useState<string[]>([]);
     const [genreVal, setGenreVal] = React.useState<string[]>([]);
     const [results, setResults] = React.useState<BaseGame[]>([]);
+
+
+    useEffect(() => {
+        updateSearchedGames();
+    }, [genreVal, tagsVal, priceVal, ratingVal, nameSearchVal])  
+      
+    const updateSearchedGames = async () => {
+        if (tagsVal.length === 0 && genreVal.length === 0 && ratingVal === -1 && nameSearchVal === "") {
+            setResults([]);
+        } else {
+            let newSearchedGames = await searchGames(tagsVal.join(), genreVal.join(), nameSearchVal);           
+            if (ratingVal !== -1) {
+                newSearchedGames = newSearchedGames.filter((game: BaseGame) => { 
+                    if (game.rating <= ratingVal && game.rating > ratingVal - 1) 
+                        return game;
+                }) 
+            }
+            setResults([...newSearchedGames]);
+        }
+    }
+
+    // const {
+    //     onScroll,
+    //     loadMore,
+    //     results: games,
+    //     isLoading: loadingGames,
+    // } = usePageination(getGamesUrl(gameQuery), parseToBaseGame,);
+
     
     const onSearch = async () => {
         await updateSearchedGames();
@@ -24,35 +52,14 @@ export const SearchPage: React.FC = () => {
 
     const onPriceChange = (value: number) => {
         // TODO: Price will be added when the games are pushed into the DB
-        setPriceVal(value)
+        setPriceVal(value);
     }
 
     const onRatingChange = async (value: number) => {
-        setRatingVal(value)
+        setRatingVal(value);
     }
 
-    const updateSearchedGames = async () => {
-        if (tagsVal.length === 0 && genreVal.length === 0 && ratingVal === -1 && nameSearchVal === "") {
-            setResults([]);
-        } else {
-            let newSearchedGames = await searchGames(tagsVal.join(), genreVal.join());           
-            if (ratingVal !== -1) {
-                newSearchedGames = newSearchedGames.filter((game: BaseGame) => { 
-                    if (game.rating <= ratingVal && game.rating > ratingVal - 1) 
-                        return game;
-                }) 
-            }
-            if (nameSearchVal !== "") {
-                newSearchedGames = newSearchedGames.filter((game: BaseGame) => {
-                    console.log(game.name);
-                    if (game.name.toLowerCase().includes(nameSearchVal.toLowerCase())) 
-                        return game;
-                })
-            }
-            setResults([...newSearchedGames]);
-        }
 
-    }
 
     const onTagsChange = (tagName: string, isChecked: boolean) => {
         const newVals = [...tagsVal];
@@ -73,10 +80,6 @@ export const SearchPage: React.FC = () => {
         }
         setGenreVal(newVals);
     }
-
-    useEffect(() => {
-        updateSearchedGames();
-    }, [genreVal, tagsVal, priceVal, ratingVal, nameSearchVal])
 
     return (
         <div className="search-page">

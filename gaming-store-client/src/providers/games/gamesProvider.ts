@@ -13,12 +13,13 @@ export function getGamesUrl(query: GameQuery = {}) {
     });
 }
 
-export async function searchGames(tags = '', genres = '') {
+export async function searchGames(tags = '', genres = '', search='') {
     return getGames({
         page_size: LIMIT,
         ordering: '-added',
         tags,
         genres,
+        search,
     });
 }
 
@@ -58,6 +59,7 @@ type Ordering =
     | 'rating'
     | 'metacritic'
     | 'games_count';
+
 
 interface GameQuery {
     id?: number;
