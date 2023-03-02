@@ -27,3 +27,8 @@ export const user = {
     profile_name: String,
     profile_description: String
 }
+
+export const adminInfo = {
+  current_users: Number,
+  earning: Number
+}

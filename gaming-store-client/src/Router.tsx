@@ -5,6 +5,7 @@ import { CartPage } from './pages/cartPage/CartPage';
 import { GenrePage } from './pages/homePage/GenrePage';
 
 import { HomePage } from './pages/homePage/HomePage';
+import { AdminPage } from './pages/adminPage/AdminPage';
 import { LoginPage, SignUpPage } from './pages/login/LoginPage';
 import { PageNotFound } from './pages/PageNotFound';
 import { SearchPage } from './pages/searchPage/SearchPage';
@@ -18,7 +19,14 @@ export const Router: FC = () => {
     return (
         <BrowserRouter>
             {user ? (
+                user.email === "admin@admin.com" ? (
                 <Routes>
+                    <Route path="*" element={<AdminPage/>}/>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/sign-up" element={<SignUpPage />} />
+                </Routes> 
+                ) : (
+                    <Routes>
                     <Route path="/" element={<Navbar />}>
                         <Route index element={<HomePage />} />
                         <Route path="tags/:tag" element={<GenrePage />} />
@@ -30,7 +38,8 @@ export const Router: FC = () => {
                     </Route>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/sign-up" element={<SignUpPage />} />
-                </Routes>
+                </Routes> 
+                )
             ) : (
                 <Routes>
                     <Route path="/sign-up" element={<SignUpPage />} />

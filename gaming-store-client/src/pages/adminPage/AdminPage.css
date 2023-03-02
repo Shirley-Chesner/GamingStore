@@ -1,0 +1,67 @@
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.playersInfo,
+.highestBoughtGames {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardHeader {
+    background: #3f2532 !important;
+    width: 100%;
+    text-align: center;
+    padding: 0 !important;
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+}
+
+.pageInfo {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.partOfPageInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-size: xx-large;
+}
+
+.cardWriting {
+    font-size: 25px !important;
+}
+
+.topStuffTable {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1em;
+    justify-content: space-between;
+}
+
+.highestBoughtGamesContent {
+    width: 95%;
+    display: grid;
+}
+
+.highestBoughtGames th {
+    background: #323232;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.highestBoughtGames {
+    text-align: left;
+    font-size: 1.8rem;
+    padding: 7px 0;
+    padding-top: 0 !important;
+}
+
+.umum {
+    text-align: center;
+}
