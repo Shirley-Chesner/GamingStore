@@ -22,6 +22,19 @@ export async function searchGames(tags = '', genres = '') {
     });
 }
 
+export async function getAllGamesInfo(query: GameQuery = {}) {
+    const res = await getGames(query);
+    console.log(res);
+
+    for (let index = 0; index < res.length; index++) {
+        const info = await GetGameFromDB(res[index].id);
+        console.log('a', info);
+
+        res[index].price = info.price;
+    }
+    return res;
+}
+
 export async function getGames(query: GameQuery = {}) {
     const res = await fetchFromUrl(getGamesUrl(query));
     return res.results ? res.results.map(parseToBaseGame) : [];
@@ -31,6 +44,12 @@ export async function getGameById(id: number) {
     const url = `${API_URL}games/${id}?key=${API_KEY}`;
     const res = await fetchFromUrl(url);
     return res ? parseToBaseGame(res) : null;
+}
+
+export async function GetGameFromDB(gameID: number) {
+    const url = `http://localhost:1234/games?game_id=${gameID}`;
+    const res = await fetchFromUrl(url);
+    return res;
 }
 
 export async function getGenres(type: ExtraData = 'genres') {
@@ -74,6 +93,7 @@ interface GameQuery {
 }
 
 export interface ApiReturnType<T> {
+    price: any;
     count: number;
     next: string;
     previous: string;

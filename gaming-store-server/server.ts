@@ -1,6 +1,7 @@
 import express from "express";
 import config from "config";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 import { routes } from "./src/routes/router";
 import { dbController } from "./src/controllers/db-controller";
@@ -10,6 +11,7 @@ const { Server } = require("socket.io");
 
 const app = express();
 const port = config.get("port");
+app.use(cors());
 
 // const dbURL: string = config.get("connectToDB");
 

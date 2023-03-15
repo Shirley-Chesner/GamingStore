@@ -5,6 +5,7 @@ export interface BaseGame {
     rating: number;
     added: number;
     metacritic?: number;
+    price: number;
 }
 
 // TODO: add more fields

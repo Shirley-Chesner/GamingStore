@@ -2,7 +2,7 @@ import './HomePage.css';
 
 import { FC, useCallback } from 'react';
 
-import { parseToBaseGame } from '../../providers';
+import { parseToFullGame } from '../../providers';
 import { ExtraData, getGames, getGamesUrl, getGenres } from '../../providers/games/gamesProvider';
 import { Carousel, usePageination, useFetch, capitalize } from '../../ui';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ export const HomePage: FC = () => {
         loadMore,
         results: games,
         isLoading: loadingGames,
-    } = usePageination(getGamesUrl(), parseToBaseGame);
+    } = usePageination(getGamesUrl(), parseToFullGame);
 
     const { value: topGames, isLoading: loadingTopGames } = useFetch(
         () => getGames({ page_size: 10 }),

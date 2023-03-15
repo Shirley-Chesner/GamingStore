@@ -8,7 +8,15 @@ import type { BaseGame } from '../../providers';
 
 type Props = BaseGame;
 
-export const GameDetails: FC<Props> = ({ added, id, imageUrl, metacritic, name, rating }) => {
+export const GameDetails: FC<Props> = ({
+    added,
+    id,
+    imageUrl,
+    metacritic,
+    name,
+    rating,
+    price,
+}) => {
     return (
         <Card itemType="dark" className="game-details">
             <img src={imageUrl} />
@@ -19,6 +27,7 @@ export const GameDetails: FC<Props> = ({ added, id, imageUrl, metacritic, name, 
                         {metacritic}
                     </span>
                 )}
+                <span>Cost: {price}$</span>
                 <span>{added}</span>
             </div>
         </Card>

@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { Skeleton } from '@mui/material';
 
-import { parseToBaseGame } from '../../providers';
+import { parseToBaseGame, parseToFullGame } from '../../providers';
 import { getGames, getGamesUrl, getGenreDetails } from '../../providers/games/gamesProvider';
 import { Carousel, usePageination, useFetch } from '../../ui';
 import { GamesList } from '../../ui/games/GamesList';
@@ -28,7 +28,7 @@ export const GenrePage: FC = () => {
         loadMore,
     } = usePageination(
         getGamesUrl({ genres: genre, tags: tag, platforms: platform }),
-        parseToBaseGame,
+        parseToFullGame,
     );
 
     const { value: topGames, isLoading: loadingTopGames } = useFetch(
