@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import Card from '@mui/material/Card';
 
 import type { BaseGame } from '../../providers';
+import { useNavigate } from 'react-router-dom';
 
 type Props = BaseGame;
 
@@ -17,8 +18,9 @@ export const GameDetails: FC<Props> = ({
     rating,
     price,
 }) => {
+    const navigate = useNavigate();
     return (
-        <Card itemType="dark" className="game-details">
+        <Card itemType="dark" className="game-details" onClick={() => navigate('/gameProfile')}>
             <img src={imageUrl} />
             <h3>{name}</h3>
             <div className="details">

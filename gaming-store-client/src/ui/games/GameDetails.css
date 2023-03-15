@@ -4,6 +4,7 @@
     flex-direction: column;
     margin: 0.5em;
     padding-bottom: 0.5em;
+    cursor: pointer;
 }
 
 .game-details img {
