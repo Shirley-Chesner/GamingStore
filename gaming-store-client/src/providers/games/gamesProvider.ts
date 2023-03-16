@@ -22,19 +22,6 @@ export async function searchGames(tags = '', genres = '') {
     });
 }
 
-export async function getAllGamesInfo(query: GameQuery = {}) {
-    const res = await getGames(query);
-    console.log(res);
-
-    for (let index = 0; index < res.length; index++) {
-        const info = await GetGameFromDB(res[index].id);
-        console.log('a', info);
-
-        res[index].price = info.price;
-    }
-    return res;
-}
-
 export async function getGames(query: GameQuery = {}) {
     const res = await fetchFromUrl(getGamesUrl(query));
     return res.results ? res.results.map(parseToBaseGame) : [];

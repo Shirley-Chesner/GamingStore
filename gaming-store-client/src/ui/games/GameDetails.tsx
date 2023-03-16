@@ -20,7 +20,11 @@ export const GameDetails: FC<Props> = ({
 }) => {
     const navigate = useNavigate();
     return (
-        <Card itemType="dark" className="game-details" onClick={() => navigate('/gameProfile')}>
+        <Card
+            itemType="dark"
+            className="game-details"
+            onClick={() => navigate(`/gameProfile/${id}`)}
+        >
             <img src={imageUrl} />
             <h3>{name}</h3>
             <div className="details">

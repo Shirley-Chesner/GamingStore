@@ -35,7 +35,7 @@ export const Router: FC = () => {
                             <Route path="platforms/:platform" element={<GenrePage />} />
                             <Route path="cart" element={<CartPage />} />
                             <Route path="search" element={<SearchPage />} />
-                            <Route path="gameProfile" element={<GameProfile />} />
+                            <Route path="gameProfile/:id" element={<GameProfile />} />
                             <Route path="*" element={<PageNotFound />} />
                         </Route>
                         <Route path="/login" element={<LoginPage />} />
