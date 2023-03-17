@@ -43,7 +43,9 @@ export const useAuth = () => {
 
     const signUp = async (email: string, password: string, name: string) => {
         const user = await authSignUp(email, password, name);
-
+        // TODO: add description?
+        await addUserToDB(user.uid, user.displayName ? user.displayName : '', '');
+        // user.
         // add to mongo here
         // const { token, ...userWithoutToken } = user;
 
@@ -53,13 +55,48 @@ export const useAuth = () => {
         //     console.log("createUser failed", err);
         // }
 
+        //    userID: Number,
+        // profileName: String,
+        // profileDescription: String
+
         return user;
+    };
+
+    const addUserToDB = async (id: string, name: string, description: string) => {
+        await fetch('http://localhost:1234/user', {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID: id,
+                profileName: name,
+                profileDescription: description,
+            }),
+        });
+    };
+
+    const setUserStatusToOffline = async (id: string) => {
+        await fetch(`http://localhost:1234/user/${id}`, {
+            method: 'PUT',
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                update: { isOnline: false },
+            }),
+        });
     };
 
     const signOutFunc = async () => {
         // Router.push(url ? url : "/");
 
         await signOut();
+        console.log(user);
+
+        await setUserStatusToOffline(user?.id ? user.id : '');
         onUserChange(null);
     };
 

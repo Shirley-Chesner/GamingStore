@@ -178,6 +178,7 @@ const COLORS = [
 
 type CarouselItemProps = Item & {
     width: number;
+
     index: number;
     randomColors?: boolean;
 };

@@ -36,7 +36,7 @@ dbRoute.get("/users", (req: Request, res: Response) => {
 
 // Add info
 
-dbRoute.post("/comments", (req: Request, res: Response) => {
+dbRoute.post("/comment", (req: Request, res: Response) => {
   const newComment = req.body;
   dbController
     .insertComment(
@@ -55,7 +55,7 @@ dbRoute.post("/comments", (req: Request, res: Response) => {
     });
 });
 
-dbRoute.post("/games", (req: Request, res: Response) => {
+dbRoute.post("/game", (req: Request, res: Response) => {
   const newGame = req.body;
   dbController
     .insertGame(newGame.gameID, newGame.price, newGame.rating)
@@ -69,7 +69,7 @@ dbRoute.post("/games", (req: Request, res: Response) => {
     });
 });
 
-dbRoute.post("/users", (req: Request, res: Response) => {
+dbRoute.post("/user", (req: Request, res: Response) => {
   const newUser = req.body;
   dbController
     .insertUser(newUser.userID, newUser.profileName, newUser.profileDescription)
@@ -85,7 +85,7 @@ dbRoute.post("/users", (req: Request, res: Response) => {
 
 // Delete info
 
-dbRoute.delete("/comments/:id", (req: Request, res: Response) => {
+dbRoute.delete("/comment/:id", (req: Request, res: Response) => {
   dbController
     .deleteComment(+req.params.id)
     .then(() => {
@@ -98,7 +98,7 @@ dbRoute.delete("/comments/:id", (req: Request, res: Response) => {
     });
 });
 
-dbRoute.delete("/users/:id", (req: Request, res: Response) => {
+dbRoute.delete("/user/:id", (req: Request, res: Response) => {
   dbController
     .deleteUser(+req.params.id)
     .then(() => {
@@ -111,7 +111,7 @@ dbRoute.delete("/users/:id", (req: Request, res: Response) => {
     });
 });
 
-dbRoute.delete("/games/:id", (req: Request, res: Response) => {
+dbRoute.delete("/game/:id", (req: Request, res: Response) => {
   dbController
     .deleteGame(+req.params.id)
     .then(() => {
@@ -126,7 +126,7 @@ dbRoute.delete("/games/:id", (req: Request, res: Response) => {
 
 // Update info
 
-dbRoute.put("/comments/:id", (req: Request, res: Response) => {
+dbRoute.put("/comment/:id", (req: Request, res: Response) => {
   dbController
     .updateComment(+req.params.id, req.body.update, req.body.isArray)
     .then(() => {
@@ -139,7 +139,7 @@ dbRoute.put("/comments/:id", (req: Request, res: Response) => {
     });
 });
 
-dbRoute.put("/games/:id", (req: Request, res: Response) => {
+dbRoute.put("/game/:id", (req: Request, res: Response) => {
   dbController
     .updateGame(+req.params.id, req.body.update, req.body.isArray)
     .then(() => {
@@ -152,9 +152,13 @@ dbRoute.put("/games/:id", (req: Request, res: Response) => {
     });
 });
 
-dbRoute.put("/users/:id", (req: Request, res: Response) => {
+dbRoute.put("/user/:id", (req: Request, res: Response) => {
   dbController
-    .updateUser(+req.params.id, req.body.update, req.body.isArray)
+    .updateUser(
+      +req.params.id,
+      req.body.update,
+      req.body.isArray ? req.body.isArray : false
+    )
     .then(() => {
       res.status(StatusCodes.OK);
       res.send(`The user ${req.params.id} was updated`);

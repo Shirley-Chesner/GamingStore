@@ -1,0 +1,92 @@
+.main-game-screen {
+    display: flex !important;
+    align-items: stretch;
+}
+
+.game-screenshots {
+    flex: 1;
+    padding: 1em;
+    /* background-color: #292929; */
+}
+
+.genral-game-info {
+    text-align: left;
+    margin-left: 20px;
+}
+
+.game-description {
+    width: 30em;
+    margin-left: 20px;
+}
+
+.add-to-card-btn {
+    background: rgb(1, 54, 54) !important;
+    border: white 1px solid !important;
+    border-radius: 1em !important;
+}
+
+.add-to-card-btn :hover {
+    background: rgb(1, 22, 22) !important;
+}
+
+.game-info {
+    /* background-color: #292929; */
+    padding: 1em;
+}
+
+.genere-of-game {
+    border: 1px solid white;
+    background-color: rgb(1, 54, 54);
+    border-radius: 1em;
+    padding: 0.5em;
+    margin-right: 0.5em;
+}
+
+.game-generes {
+    display: flex;
+    padding-top: 2em;
+}
+
+.buy-game-title {
+    text-align: left;
+    margin-left: 2em;
+}
+
+.buy-game {
+    background-color: #292929;
+    margin: auto;
+    width: 50%;
+}
+
+.buy-game-btn {
+    padding-bottom: 0.5em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 30px;
+    color: #75caec;
+}
+
+.achievements {
+    display: inline-grid;
+    grid-template-columns: auto auto auto;
+    gap: 0.5em;
+    padding: 0.5em;
+}
+
+.main-achievements {
+    background-color: #292929;
+    width: 60%;
+    margin: auto;
+    text-align: left;
+    overflow-y: scroll;
+    height: 20em;
+}
+
+.achievements-title {
+    text-align: center;
+}
+
+.game-description-content {
+    display: block;
+}

@@ -56,7 +56,7 @@ export class dbController {
   }
 
   static async insertUser(
-    userID: Number,
+    userID: String,
     profileName: String,
     profileDescription: String
   ) {
@@ -67,6 +67,7 @@ export class dbController {
       in_cart: [],
       comments: [],
       ratings: 0,
+      isOnline: true,
       profile_name: profileName,
       profile_description: profileDescription,
     });
@@ -121,10 +122,12 @@ export class dbController {
     update: any,
     isUpdateArray: boolean = false
   ) {
+    console.log("im here");
+
     if (isUpdateArray) {
       update = { $push: update };
     }
-    await dbController.userModal.updateOne({ uesr_id: userID }, update);
+    await dbController.userModal.updateOne({ user_id: userID }, update);
   }
 
   static async updateGame(
