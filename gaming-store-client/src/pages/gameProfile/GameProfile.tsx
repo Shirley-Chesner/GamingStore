@@ -1,9 +1,9 @@
 import './GameProfile.css';
 
 import { Card, CardContent, CardHeader, CardMedia, Rating, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getGameById } from '../../providers';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getGameById, GetGameFromDB, getUserFromDB, useAuthContext } from '../../providers';
 import ShowMoreText from 'react-show-more-text';
 import { Carousel } from '../../ui';
 import { useFetch } from '../../ui/hooks/useFetch';
@@ -13,10 +13,32 @@ import Button from '@mui/material/Button';
 
 export const GameProfile: React.FC = () => {
     const { id } = useParams();
-    const { value: fullGame, isLoading: loadingFullGame } = useFetch(() => getGameById(+id!), null);
+    const navigate = useNavigate();
+    const { user } = useAuthContext();
+    const { value: fullGame, isLoading: loadingFullGame } = useFetch(
+        () => getGameById(+id!),
+        undefined,
+    );
+
     const [expand, setExpand] = useState(false);
+    const [isGameInLibrary, setIsGameInLibrary] = useState(true);
+
     const onClick = () => {
         setExpand(!expand);
+    };
+
+    useEffect(() => {
+        checkIfGameInLibrary();
+    }, []);
+
+    const checkIfGameInLibrary = async () => {
+        const gameFromDB: any = await GetGameFromDB(+id!);
+        const userFromDB: any = await getUserFromDB(user?.id ? user.id : '');
+        const isGameIn = userFromDB?.gameLibrary.some(
+            (game: any) => game.idFromDB === gameFromDB[0]._id,
+        );
+
+        setIsGameInLibrary(isGameIn);
     };
 
     return (
@@ -82,9 +104,21 @@ export const GameProfile: React.FC = () => {
                     </div>
                     <div className="buy-game-btn">
                         <span>{fullGame?.price}$</span>
-                        <Button className="add-to-card-btn" variant="outlined">
-                            Add To Cart
-                        </Button>
+                        {isGameInLibrary ? (
+                            <Button className="add-to-card-btn" variant="outlined" disabled={true}>
+                                Game is Already In Library
+                            </Button>
+                        ) : (
+                            <Button
+                                className="add-to-card-btn"
+                                variant="outlined"
+                                onClick={() =>
+                                    navigate(`/cart/${fullGame?.id}/${fullGame?.idFromDB}`)
+                                }
+                            >
+                                Add To Cart
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>

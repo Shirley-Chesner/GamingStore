@@ -23,19 +23,11 @@ export const useAuth = () => {
     const onUserChange = async (rawUser: FirebaseUser | null) => {
         if (rawUser) {
             const _user = await _formatUser(rawUser);
-
             setUser(_user);
-
-            // cookie.set("purple-door-finders-token", _user.token, {
-            //     expires: 1,
-            // });
-
             setLoading(false);
             return _user;
         } else {
             setUser(null);
-            // cookie.remove("purple-door-finders-token");
-
             setLoading(false);
             return null;
         }
@@ -43,22 +35,7 @@ export const useAuth = () => {
 
     const signUp = async (email: string, password: string, name: string) => {
         const user = await authSignUp(email, password, name);
-        // TODO: add description?
         await addUserToDB(user.uid, user.displayName ? user.displayName : '', '');
-        // user.
-        // add to mongo here
-        // const { token, ...userWithoutToken } = user;
-
-        // try {
-        //     await createUser(user.uid, { ...userWithoutToken, firstTime: true });
-        // } catch (err) {
-        //     console.log("createUser failed", err);
-        // }
-
-        //    userID: Number,
-        // profileName: String,
-        // profileDescription: String
-
         return user;
     };
 
@@ -91,7 +68,6 @@ export const useAuth = () => {
     };
 
     const signOutFunc = async () => {
-        // Router.push(url ? url : "/");
         await signOut();
         await setUserStatus(user?.id ? user.id : '', false);
         onUserChange(null);

@@ -1,8 +1,14 @@
-import { GetGameFromDB, getGameScreemShots, getGameAchievements } from './gamesProvider';
+import {
+    GetGameFromDB,
+    getGameScreemShots,
+    getGameAchievements,
+    getGameById,
+} from './gamesProvider';
 import { BaseGame, Genre, GenreDetails } from './types';
 
 export function parseToBaseGame(game: any): BaseGame {
     return {
+        idFromDB: game.idFromDB ? game.idFromDB : 0,
         id: game.id,
         added: game.added,
         imageUrl: game.background_image ? game.background_image : game.imageUrl,
@@ -14,10 +20,11 @@ export function parseToBaseGame(game: any): BaseGame {
 }
 
 export async function parseToFullGame(game: any) {
-    const updatedGame = await parseToGameWithPrice(game);
+    const updatedGame: any = await parseToGameWithPrice(game);
     const screenShots = await getGameScreemShots(game.id);
     const achievements = await getGameAchievements(game.id);
     return {
+        idFromDB: updatedGame.idFromDB,
         id: game.id,
         name: game.name,
         price: updatedGame.price,
@@ -51,12 +58,41 @@ export function parseToScreenShot(game: any) {
     };
 }
 
+export async function parseToUser(user: any) {
+    const gamesInCart = [];
+    for (let index = 0; index < user.in_cart.length; index++) {
+        const game: any = await GetGameFromDB(user.in_cart[index], '_id');
+        if (game.length !== 0) {
+            const gameFromAPI = await parseToFullGame(await getGameById(game[0].game_id));
+            gamesInCart.push(gameFromAPI);
+        }
+    }
+
+    const gamesInLibrary = [];
+    for (let index = 0; index < user.game_library.length; index++) {
+        const game: any = await GetGameFromDB(user.game_library[index], '_id');
+        if (game.length !== 0) {
+            const gameFromAPI = await parseToFullGame(await getGameById(game[0].game_id));
+            gamesInLibrary.push(gameFromAPI);
+        }
+    }
+
+    return {
+        userID: user.user_id,
+        inCart: gamesInCart,
+        gameLibrary: gamesInLibrary,
+        comments: user.Comments,
+    };
+}
+
 export async function parseToGameWithPrice(game: any): Promise<BaseGame> {
     const info: any = await GetGameFromDB(game.id);
     if (info.length != 0) {
-        return parseToBaseGame({ ...game, price: info[0].price });
+        const a = { ...game, price: info[0].price };
+        return parseToBaseGame({ ...a, idFromDB: info[0]._id });
     } else {
-        return parseToBaseGame({ ...game, price: Math.floor(Math.random() * 301) });
+        const a = { ...game, price: Math.floor(Math.random() * 301) };
+        return parseToBaseGame({ a, idFromDB: 0 });
     }
 }
 

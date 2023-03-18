@@ -25,9 +25,6 @@ export class dbController {
     dbController.gameModal = mongoose.model("games", gameSchema);
     dbController.userModal = mongoose.model("users", userSchema);
     dbController.adminInfoModal = mongoose.model("adminInfo", adminInfoSchema);
-
-    // Initalize the admin info
-    // dbController.initalizeAdminInfo().then();
   }
 
   static async initalizeAdminInfo() {
@@ -119,11 +116,21 @@ export class dbController {
 
   static async updateUser(
     userID: string,
-    update: any,
-    isUpdateArray: boolean = false
+    update: object,
+    isUpdateArray: boolean = false,
+    shouldRemove: boolean = false
   ) {
+    const temp = await dbController.getUsers(update);
+
     if (isUpdateArray) {
       update = { $push: update };
+    }
+    if (shouldRemove) {
+      update = { $pull: update };
+    }
+
+    if (temp.length != 0 && isUpdateArray) {
+      return;
     }
     await dbController.userModal.findOneAndUpdate({ user_id: userID }, update);
   }
@@ -133,8 +140,12 @@ export class dbController {
     update: any,
     isUpdateArray: boolean = false
   ) {
+    const temp = await dbController.getGames(update);
     if (isUpdateArray) {
       update = { $push: update };
+    }
+    if (temp.length != 0 && isUpdateArray) {
+      return;
     }
     await dbController.gameModal.findOneAndUpdate({ game_id: gameID }, update);
   }
@@ -156,6 +167,7 @@ export class dbController {
     us.comments.forEach(function (c: any) {
       usersComments.push(dbController.getCommandInFormat(c));
     });
+
     return {
       _id: us._id,
       user_id: us.user_id,
@@ -208,16 +220,24 @@ export class dbController {
   }
 
   static async getUsers(condition: {} = {}) {
-    const usersRaw = await dbController.userModal.find(condition).exec().then();
+    const usersRaw = await dbController.userModal.find(condition).exec();
     let users: any[] = [];
     usersRaw.forEach(function (doc: any) {
       users.push(dbController.getUserInFormat(doc));
     });
+
     return users;
   }
 
   static async getGames(condition: {} = {}) {
-    const gamesRaw = await dbController.gameModal.find(condition).exec().then();
+    const gamesRaw = await dbController.gameModal
+      .find(condition)
+      .populate({
+        path: "comments",
+        select: "comment_id game_id user_id comment replays likes",
+      })
+      .exec()
+      .then();
     let games: any[] = [];
     gamesRaw.forEach(function (doc: any) {
       games.push(dbController.getGameInFormat(doc));

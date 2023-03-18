@@ -33,7 +33,7 @@ export const Router: FC = () => {
                             <Route path="tags/:tag" element={<GenrePage />} />
                             <Route path="genres/:genre" element={<GenrePage />} />
                             <Route path="platforms/:platform" element={<GenrePage />} />
-                            <Route path="cart" element={<CartPage />} />
+                            <Route path="cart/:id/:idInDB" element={<CartPage />} />
                             <Route path="search" element={<SearchPage />} />
                             <Route path="gameProfile/:id" element={<GameProfile />} />
                             <Route path="*" element={<PageNotFound />} />

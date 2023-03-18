@@ -1,4 +1,5 @@
 export interface BaseGame {
+    idFromDB: number;
     id: number;
     name: string;
     imageUrl: string;
