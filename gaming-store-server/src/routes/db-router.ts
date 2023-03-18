@@ -153,9 +153,11 @@ dbRoute.put("/game/:id", (req: Request, res: Response) => {
 });
 
 dbRoute.put("/user/:id", (req: Request, res: Response) => {
+  console.log(req.params.id);
+
   dbController
     .updateUser(
-      +req.params.id,
+      req.params.id,
       req.body.update,
       req.body.isArray ? req.body.isArray : false
     )

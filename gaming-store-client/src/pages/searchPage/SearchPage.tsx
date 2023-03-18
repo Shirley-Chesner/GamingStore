@@ -48,7 +48,6 @@ export const SearchPage: React.FC = () => {
             }
             if (nameSearchVal !== '') {
                 newSearchedGames = newSearchedGames.filter((game: BaseGame) => {
-                    console.log(game.name);
                     if (game.name.toLowerCase().includes(nameSearchVal.toLowerCase())) return game;
                 });
             }
@@ -56,10 +55,8 @@ export const SearchPage: React.FC = () => {
             const newNewArray = await Promise.all(
                 newSearchedGames.map(async (item) => {
                     return structuredClone(await parseToGameWithPrice(item));
-                    // console.log(item);
                 }),
             );
-            // console.log(newSearchedGames);
 
             setResults(newNewArray);
         }

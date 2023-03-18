@@ -14,7 +14,6 @@ export function parseToBaseGame(game: any): BaseGame {
 }
 
 export async function parseToFullGame(game: any) {
-    console.log(game);
     const updatedGame = await parseToGameWithPrice(game);
     const screenShots = await getGameScreemShots(game.id);
     const achievements = await getGameAchievements(game.id);

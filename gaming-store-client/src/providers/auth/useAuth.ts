@@ -77,7 +77,7 @@ export const useAuth = () => {
         });
     };
 
-    const setUserStatusToOffline = async (id: string) => {
+    const setUserStatus = async (id: string, state: boolean) => {
         await fetch(`http://localhost:1234/user/${id}`, {
             method: 'PUT',
             headers: {
@@ -85,19 +85,22 @@ export const useAuth = () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                update: { isOnline: false },
+                update: { isOnline: state },
             }),
         });
     };
 
     const signOutFunc = async () => {
         // Router.push(url ? url : "/");
-
         await signOut();
-        console.log(user);
-
-        await setUserStatusToOffline(user?.id ? user.id : '');
+        await setUserStatus(user?.id ? user.id : '', false);
         onUserChange(null);
+    };
+
+    const loginFunc = async (email: string, password: string) => {
+        const user = await login(email, password);
+        await setUserStatus(user.uid, true);
+        return user;
     };
 
     useEffect(() => {
@@ -110,7 +113,7 @@ export const useAuth = () => {
         user,
         loading,
         signUp,
-        login,
+        login: loginFunc,
         signOut: signOutFunc,
     };
 };

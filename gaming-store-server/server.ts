@@ -35,7 +35,6 @@ io.on("connect", (socket: any) => {
     console.log("user disconnected");
   });
   socket.on("admin", async () => {
-    console.log("help");
     dbController.getAdminInfo().then((info) => {
       io.emit("current users", info.current_users);
       io.emit("earning", info.earning);
