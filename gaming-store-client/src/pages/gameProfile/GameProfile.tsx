@@ -1,6 +1,7 @@
 import './GameProfile.css';
 
-import { Card, CardContent, CardHeader, CardMedia, Rating, Typography } from '@mui/material';
+import { Rating, TextField } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getGameById, GetGameFromDB, getUserFromDB, useAuthContext } from '../../providers';
@@ -10,18 +11,21 @@ import { useFetch } from '../../ui/hooks/useFetch';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import Button from '@mui/material/Button';
+import { AddNewCommentToDB, connectCommentToGameAndUser } from './HelpfulFunctions';
 
 export const GameProfile: React.FC = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuthContext();
-    const { value: fullGame, isLoading: loadingFullGame } = useFetch(
-        () => getGameById(+id!),
-        undefined,
-    );
+    const {
+        value: fullGame,
+        isLoading: loadingFullGame,
+        refetch,
+    } = useFetch(() => getGameById(+id!), undefined);
 
     const [expand, setExpand] = useState(false);
     const [isGameInLibrary, setIsGameInLibrary] = useState(true);
+    const [newComment, setNewComment] = useState('');
 
     const onClick = () => {
         setExpand(!expand);
@@ -39,6 +43,15 @@ export const GameProfile: React.FC = () => {
         );
 
         setIsGameInLibrary(isGameIn);
+    };
+
+    const addNewComment = async () => {
+        if (newComment !== '') {
+            await AddNewCommentToDB(newComment, fullGame?.id, user?.id ? user.id : '');
+            await connectCommentToGameAndUser(fullGame?.id, user?.id ? user.id : '');
+        }
+        setNewComment('');
+        await refetch();
     };
 
     return (
@@ -123,17 +136,53 @@ export const GameProfile: React.FC = () => {
                 </div>
             </div>
             <br />
-            <div className="main-achievements">
-                <h2 className="achievements-title">Achievements: </h2>
-                <div className="achievements">
-                    {fullGame?.achievements.map((ach, i) => (
-                        <div key={i}>
-                            <img src={ach.image} height={30} />
-                            <span> {ach.name}</span>
-                            <div>{ach.description}</div>
-                            <span>{ach.percent}%</span>
-                        </div>
-                    ))}
+            <div className="bottom-profile">
+                <div className="main-achievements">
+                    <h2 className="achievements-title">Achievements: </h2>
+                    <div className="achievements">
+                        {fullGame?.achievements.map((ach, i) => (
+                            <div key={i}>
+                                <img src={ach.image} height={30} />
+                                <span> {ach.name}</span>
+                                <div>{ach.description}</div>
+                                <span>{ach.percent}%</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="game-comments">
+                    <h2>Comments: </h2>
+                    <div className="write-your-comment">
+                        <TextField
+                            value={newComment}
+                            id="outlined-basic"
+                            onChange={(event) => {
+                                setNewComment(event.target.value);
+                            }}
+                            className="new-comment-content"
+                            label="New Comment"
+                            variant="outlined"
+                            multiline
+                        />
+                        <br />
+                        <Button
+                            variant="contained"
+                            endIcon={<SendIcon />}
+                            className="submit-new-comment-btn"
+                            onClick={addNewComment}
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                    <div className="comments">
+                        {fullGame?.comments && fullGame?.comments.length !== 0 ? (
+                            fullGame?.comments.length
+                        ) : (
+                            <div>
+                                Pretty empty here! <br /> Be the first to write a comment!
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

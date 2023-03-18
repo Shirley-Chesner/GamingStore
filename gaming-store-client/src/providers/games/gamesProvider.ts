@@ -70,6 +70,12 @@ export async function GetGameFromDB(gameID: number, variable = 'game_id') {
     return res.length !== 0 ? res : [];
 }
 
+export async function GetCommentFromDB(commentID: number, variable = '_id') {
+    const url = `http://localhost:1234/comments?${variable}=${commentID}`;
+    const res = await fetchFromUrl(url);
+    return res.length !== 0 ? res : [];
+}
+
 export const getUserFromDB = async (userID: string) => {
     const url = `http://localhost:1234/users?user_id=${userID}`;
     const res: any = await fetchFromUrl(url);

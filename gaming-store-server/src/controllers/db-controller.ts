@@ -35,14 +35,8 @@ export class dbController {
     await newInfo.save();
   }
 
-  static async insertComment(
-    commentId: number,
-    gameID: number,
-    userID: Number,
-    comment: String
-  ) {
+  static async insertComment(gameID: Number, userID: string, comment: String) {
     const newComment = new dbController.commentModal({
-      comment_id: commentId,
       game_id: gameID,
       user_id: userID,
       comment: comment,
@@ -109,7 +103,7 @@ export class dbController {
       update = { $push: update };
     }
     await dbController.commentModal.findOneAndUpdate(
-      { comment_id: commentID },
+      { _id: commentID },
       update
     );
   }
@@ -153,7 +147,6 @@ export class dbController {
   static getCommandInFormat(com: any) {
     return {
       _id: com._id,
-      comment_id: com.comment_id,
       game_id: com.game_id,
       user_id: com.user_id,
       comment: com.comment,
@@ -230,14 +223,7 @@ export class dbController {
   }
 
   static async getGames(condition: {} = {}) {
-    const gamesRaw = await dbController.gameModal
-      .find(condition)
-      .populate({
-        path: "comments",
-        select: "comment_id game_id user_id comment replays likes",
-      })
-      .exec()
-      .then();
+    const gamesRaw = await dbController.gameModal.find(condition).exec().then();
     let games: any[] = [];
     gamesRaw.forEach(function (doc: any) {
       games.push(dbController.getGameInFormat(doc));
@@ -250,7 +236,7 @@ export class dbController {
   }
 
   static async deleteComment(commentId: number) {
-    await dbController.commentModal.deleteOne({ comment_id: commentId });
+    await dbController.commentModal.deleteOne({ _id: commentId });
   }
 
   static async deleteUser(userId: number) {

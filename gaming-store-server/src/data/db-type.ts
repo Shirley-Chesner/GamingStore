@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 
 export const comment = {
-  comment_id: Number,
   game_id: Number,
-  user_id: Number,
+  user_id: String,
   comment: String,
   replays: Array<String>,
   likes: Number,

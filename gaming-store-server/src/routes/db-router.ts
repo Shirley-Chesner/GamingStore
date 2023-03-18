@@ -39,12 +39,7 @@ dbRoute.get("/users", (req: Request, res: Response) => {
 dbRoute.post("/comment", (req: Request, res: Response) => {
   const newComment = req.body;
   dbController
-    .insertComment(
-      newComment.commentId,
-      newComment.gameID,
-      newComment.userID,
-      newComment.comment
-    )
+    .insertComment(newComment.gameID, newComment.userID, newComment.comment)
     .then(() => {
       res.status(StatusCodes.OK);
       res.send("A new comment was added!");
