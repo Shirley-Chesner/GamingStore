@@ -5,6 +5,7 @@ import {
     parseToGenre,
     parseToGenreDetails,
     parseToScreenShot,
+    parseToUser,
 } from './gamesApiParses';
 
 // TODO: move this to secure place
@@ -63,11 +64,21 @@ export async function getGameAchievements(id: number) {
     return allResults.length !== 0 ? allResults.map(parseToAchievements) : [];
 }
 
-export async function GetGameFromDB(gameID: number) {
-    const url = `http://localhost:1234/games?game_id=${gameID}`;
+export async function GetGameFromDB(gameID: number, variable = 'game_id') {
+    const url = `http://localhost:1234/games?${variable}=${gameID}`;
     const res = await fetchFromUrl(url);
-    return res;
+    return res.length !== 0 ? res : [];
 }
+
+export const getUserFromDB = async (userID: string) => {
+    const url = `http://localhost:1234/users?user_id=${userID}`;
+    const res: any = await fetchFromUrl(url);
+    if (res.length !== 0) {
+        const user = await parseToUser(res[0]);
+        return user;
+    }
+    return undefined;
+};
 
 export async function getGenres(type: ExtraData = 'genres') {
     const res = await _fetch(
@@ -110,6 +121,7 @@ interface GameQuery {
 }
 
 export interface ApiReturnType<T> {
+    length: number;
     price: any;
     count: number;
     next: string;

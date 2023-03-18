@@ -5,6 +5,37 @@
     margin: 1em;
 }
 
+.order-summary-bottom {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+
+.purchase-btn {
+    margin-top: 3em;
+}
+
+.total-price-container,
+.total-game-count-container {
+    border: 1px solid black;
+    width: 90%;
+    margin: auto;
+    margin-top: 1em;
+}
+
+.remove-from-cart-button {
+    height: fit-content;
+    align-self: self-end;
+    margin-bottom: 20px !important;
+    margin-right: 20px !important;
+}
+
+.game-name {
+    align-self: center;
+}
+
 .order-summary {
     width: 35%;
     height: 100%;
@@ -21,6 +52,10 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.price-tag {
+    align-self: center;
 }
 
 .cart-information .cart-items {

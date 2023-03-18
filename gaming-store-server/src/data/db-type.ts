@@ -13,16 +13,16 @@ export const game = {
   game_id: Number,
   price: Number,
   rating: Number,
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
   how_many_bought: Number,
 };
 
 export const user = {
   user_id: String,
-  game_library: [{ type: mongoose.Schema.Types.ObjectId, ref: "game" }],
-  wish_list: [{ type: mongoose.Schema.Types.ObjectId, ref: "game" }],
-  in_cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
-  comments: Array<{ type: mongoose.Schema.Types.ObjectId; ref: "comment" }>,
+  game_library: [{ type: mongoose.Schema.Types.ObjectId, ref: "games" }],
+  wish_list: [{ type: mongoose.Schema.Types.ObjectId, ref: "games" }],
+  in_cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
+  comments: Array<{ type: mongoose.Schema.Types.ObjectId; ref: "comments" }>,
   ratings: Number,
   profile_name: String,
   profile_description: String,
