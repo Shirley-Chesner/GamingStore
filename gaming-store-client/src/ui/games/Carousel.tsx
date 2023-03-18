@@ -6,7 +6,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Skeleton } from '@mui/material';
 import classNames from 'classnames';
 
-interface Item {
+export interface Item {
     id: number;
     name: string;
     imageUrl: string;
@@ -178,6 +178,7 @@ const COLORS = [
 
 type CarouselItemProps = Item & {
     width: number;
+
     index: number;
     randomColors?: boolean;
 };

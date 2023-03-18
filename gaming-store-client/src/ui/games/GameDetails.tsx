@@ -5,12 +5,26 @@ import classNames from 'classnames';
 import Card from '@mui/material/Card';
 
 import type { BaseGame } from '../../providers';
+import { useNavigate } from 'react-router-dom';
 
 type Props = BaseGame;
 
-export const GameDetails: FC<Props> = ({ added, id, imageUrl, metacritic, name, rating }) => {
+export const GameDetails: FC<Props> = ({
+    added,
+    id,
+    imageUrl,
+    metacritic,
+    name,
+    rating,
+    price,
+}) => {
+    const navigate = useNavigate();
     return (
-        <Card itemType="dark" className="game-details">
+        <Card
+            itemType="dark"
+            className="game-details"
+            onClick={() => navigate(`/gameProfile/${id}`)}
+        >
             <img src={imageUrl} />
             <h3>{name}</h3>
             <div className="details">
@@ -19,6 +33,7 @@ export const GameDetails: FC<Props> = ({ added, id, imageUrl, metacritic, name, 
                         {metacritic}
                     </span>
                 )}
+                <span>Cost: {price}$</span>
                 <span>{added}</span>
             </div>
         </Card>

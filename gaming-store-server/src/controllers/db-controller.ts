@@ -56,7 +56,7 @@ export class dbController {
   }
 
   static async insertUser(
-    userID: Number,
+    userID: String,
     profileName: String,
     profileDescription: String
   ) {
@@ -67,6 +67,7 @@ export class dbController {
       in_cart: [],
       comments: [],
       ratings: 0,
+      isOnline: true,
       profile_name: profileName,
       profile_description: profileDescription,
     });
@@ -110,21 +111,21 @@ export class dbController {
     if (isUpdateArray) {
       update = { $push: update };
     }
-    await dbController.commentModal.updateOne(
+    await dbController.commentModal.findOneAndUpdate(
       { comment_id: commentID },
       update
     );
   }
 
   static async updateUser(
-    userID: number,
+    userID: string,
     update: any,
     isUpdateArray: boolean = false
   ) {
     if (isUpdateArray) {
       update = { $push: update };
     }
-    await dbController.userModal.updateOne({ uesr_id: userID }, update);
+    await dbController.userModal.findOneAndUpdate({ user_id: userID }, update);
   }
 
   static async updateGame(
@@ -135,7 +136,7 @@ export class dbController {
     if (isUpdateArray) {
       update = { $push: update };
     }
-    await dbController.gameModal.updateOne({ game_id: gameID }, update);
+    await dbController.gameModal.findOneAndUpdate({ game_id: gameID }, update);
   }
 
   static getCommandInFormat(com: any) {

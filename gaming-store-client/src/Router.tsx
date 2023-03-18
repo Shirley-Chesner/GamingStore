@@ -11,6 +11,7 @@ import { PageNotFound } from './pages/PageNotFound';
 import { SearchPage } from './pages/searchPage/SearchPage';
 import { useAuthContext } from './providers';
 import { Navbar } from './ui';
+import { GameProfile } from './pages/gameProfile/GameProfile';
 
 export const Router: FC = () => {
     const { user, loading } = useAuthContext();
@@ -19,26 +20,27 @@ export const Router: FC = () => {
     return (
         <BrowserRouter>
             {user ? (
-                user.email === "admin@admin.com" ? (
-                <Routes>
-                    <Route path="*" element={<AdminPage/>}/>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/sign-up" element={<SignUpPage />} />
-                </Routes> 
+                user.email === 'admin@admin.com' ? (
+                    <Routes>
+                        <Route path="*" element={<AdminPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/sign-up" element={<SignUpPage />} />
+                    </Routes>
                 ) : (
                     <Routes>
-                    <Route path="/" element={<Navbar />}>
-                        <Route index element={<HomePage />} />
-                        <Route path="tags/:tag" element={<GenrePage />} />
-                        <Route path="genres/:genre" element={<GenrePage />} />
-                        <Route path="platforms/:platform" element={<GenrePage />} />
-                        <Route path="cart" element={<CartPage />} />
-                        <Route path="search" element={<SearchPage />} />
-                        <Route path="*" element={<PageNotFound />} />
-                    </Route>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/sign-up" element={<SignUpPage />} />
-                </Routes> 
+                        <Route path="/" element={<Navbar />}>
+                            <Route index element={<HomePage />} />
+                            <Route path="tags/:tag" element={<GenrePage />} />
+                            <Route path="genres/:genre" element={<GenrePage />} />
+                            <Route path="platforms/:platform" element={<GenrePage />} />
+                            <Route path="cart" element={<CartPage />} />
+                            <Route path="search" element={<SearchPage />} />
+                            <Route path="gameProfile/:id" element={<GameProfile />} />
+                            <Route path="*" element={<PageNotFound />} />
+                        </Route>
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/sign-up" element={<SignUpPage />} />
+                    </Routes>
                 )
             ) : (
                 <Routes>

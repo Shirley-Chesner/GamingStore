@@ -19,7 +19,7 @@ async function script() {
     const fetch3 = await getGames(fetch2.next)
     const games = [...fetch1.results,...fetch2.results,...fetch3.results]
     const res = games.map(async (game, i) => {
-        await fetch('http://localhost:1234/games', {
+        await fetch('http://localhost:1234/game', {
             method: 'POST',
             headers: {
                 accept: 'application/json',

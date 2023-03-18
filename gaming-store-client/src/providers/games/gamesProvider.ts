@@ -1,4 +1,11 @@
-import { parseToBaseGame, parseToGenre, parseToGenreDetails } from './gamesApiParses';
+import {
+    parseToAchievements,
+    parseToBaseGame,
+    parseToFullGame,
+    parseToGenre,
+    parseToGenreDetails,
+    parseToScreenShot,
+} from './gamesApiParses';
 
 // TODO: move this to secure place
 const API_KEY = 'd4687bc2b72c4bd281670ceae4e8c209';
@@ -13,7 +20,7 @@ export function getGamesUrl(query: GameQuery = {}) {
     });
 }
 
-export async function searchGames(tags = '', genres = '', search='') {
+export async function searchGames(tags = '', genres = '', search = '') {
     return getGames({
         page_size: LIMIT,
         ordering: '-added',
@@ -31,7 +38,35 @@ export async function getGames(query: GameQuery = {}) {
 export async function getGameById(id: number) {
     const url = `${API_URL}games/${id}?key=${API_KEY}`;
     const res = await fetchFromUrl(url);
-    return res ? parseToBaseGame(res) : null;
+    return res ? parseToFullGame(res) : null;
+}
+
+export async function getGameScreemShots(id: number) {
+    const url = `${API_URL}games/${id}/screenshots?key=${API_KEY}`;
+    const res = await fetchFromUrl(url);
+    return res ? res.results.map(parseToScreenShot) : [];
+}
+
+export async function getGameAchievements(id: number) {
+    let url = `${API_URL}games/${id}/achievements?key=${API_KEY}`;
+    let res = await fetchFromUrl(url);
+    const allResults: any[] = [];
+    let pageNumber = 1;
+    while (res.next) {
+        res.results.map((i: any) => {
+            allResults.push(i);
+        });
+        pageNumber++;
+        url = `${API_URL}games/${id}/achievements?key=${API_KEY}&page=${pageNumber}`;
+        res = await fetchFromUrl(url);
+    }
+    return allResults.length !== 0 ? allResults.map(parseToAchievements) : [];
+}
+
+export async function GetGameFromDB(gameID: number) {
+    const url = `http://localhost:1234/games?game_id=${gameID}`;
+    const res = await fetchFromUrl(url);
+    return res;
 }
 
 export async function getGenres(type: ExtraData = 'genres') {
@@ -60,7 +95,6 @@ type Ordering =
     | 'metacritic'
     | 'games_count';
 
-
 interface GameQuery {
     id?: number;
     page?: number;
@@ -76,6 +110,7 @@ interface GameQuery {
 }
 
 export interface ApiReturnType<T> {
+    price: any;
     count: number;
     next: string;
     previous: string;

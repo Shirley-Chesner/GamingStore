@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { fetchFromUrl } from '../../providers';
+import { fetchFromUrl, GetGameFromDB } from '../../providers';
 
 const DISTANCE_FROM_BOTTOM = 100;
 
 export function usePageination<T>(
     url: string,
-    parseResult?: (value: any) => T,
+    parseResult?: (value: any) => Promise<T> | T,
     filterResult?: (result: T) => boolean,
 ) {
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +26,10 @@ export function usePageination<T>(
 
                 nextUrl.current = res.next;
 
-                const parsedResults = parseResult ? res.results?.map(parseResult) : res.results;
+                const promiseParsedResults = parseResult
+                    ? res.results?.map(parseResult)
+                    : res.results;
+                const parsedResults = await Promise.all(promiseParsedResults);
                 const filteredResults = filterResult
                     ? parsedResults?.filter(filterResult)
                     : parsedResults;
