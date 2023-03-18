@@ -22,18 +22,20 @@ export const CartPage: FC = () => {
     }, []);
 
     const addGameToCart = async () => {
-        await fetch(`http://localhost:1234/user/${user?.id}`, {
-            method: 'PUT',
-            headers: {
-                accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                update: { in_cart: idInDB },
-                isArray: true,
-            }),
-        });
-        await refetch();
+        if (idInDB) {
+            await fetch(`http://localhost:1234/user/${user?.id}`, {
+                method: 'PUT',
+                headers: {
+                    accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    update: { in_cart: idInDB },
+                    isArray: true,
+                }),
+            });
+            await refetch();
+        }
     };
 
     const removeAllTheGames = async () => {
