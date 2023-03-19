@@ -3,7 +3,7 @@ import './CartPage.css';
 import { Button, Card } from '@mui/material';
 import { FC, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getUserFromDB, useAuthContext } from '../../providers';
+import { getUserFromDB, parseToUser, useAuthContext } from '../../providers';
 import { useFetch } from '../../ui';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -15,7 +15,10 @@ export const CartPage: FC = () => {
         value: userInfo,
         isLoading: loadingUserInfo,
         refetch,
-    } = useFetch(() => getUserFromDB(user?.id ? user.id : ''), undefined);
+    } = useFetch(
+        async () => await parseToUser(await getUserFromDB(user?.id ? user.id : '')),
+        undefined,
+    );
 
     useEffect(() => {
         addGameToCart();
@@ -55,7 +58,7 @@ export const CartPage: FC = () => {
     const getTotalPrice = () => {
         let price = 0;
         userInfo?.inCart.forEach((item) => {
-            price += item.price;
+            price += item?.price;
         });
         return price;
     };
@@ -86,7 +89,7 @@ export const CartPage: FC = () => {
     const buyGames = async () => {
         const games: any = [];
         userInfo?.inCart.forEach((game) => {
-            games.push(game.idFromDB);
+            games.push(game?.idFromDB);
         });
         await fetch(`http://localhost:1234/user/${user?.id}`, {
             method: 'PUT',

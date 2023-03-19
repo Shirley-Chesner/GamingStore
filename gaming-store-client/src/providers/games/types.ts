@@ -1,5 +1,6 @@
 export interface BaseGame {
     idFromDB: number;
+    comments: [];
     id: number;
     name: string;
     imageUrl: string;
