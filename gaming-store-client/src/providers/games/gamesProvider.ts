@@ -36,10 +36,15 @@ export async function getGames(query: GameQuery = {}) {
     return res.results ? res.results.map(parseToBaseGame) : [];
 }
 
-export async function getGameById(id: number) {
+export async function getGameById(
+    id: number,
+    priceFromDB = null,
+    idFromDB = null,
+    commentsFromDB = null,
+) {
     const url = `${API_URL}games/${id}?key=${API_KEY}`;
     const res = await fetchFromUrl(url);
-    return res ? parseToFullGame(res) : null;
+    return res ? parseToFullGame(res, priceFromDB, idFromDB, commentsFromDB) : null;
 }
 
 export async function getGameScreemShots(id: number) {
@@ -79,11 +84,8 @@ export async function GetCommentFromDB(commentID: number, variable = '_id') {
 export const getUserFromDB = async (userID: string) => {
     const url = `http://localhost:1234/users?user_id=${userID}`;
     const res: any = await fetchFromUrl(url);
-    if (res.length !== 0) {
-        const user = await parseToUser(res[0]);
-        return user;
-    }
-    return undefined;
+
+    return res.length !== 0 ? res[0] : undefined;
 };
 
 export async function getGenres(type: ExtraData = 'genres') {

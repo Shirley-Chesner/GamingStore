@@ -24,27 +24,41 @@ export function parseToBaseGame(game: any): BaseGame {
 
 export async function parseComment(comment: any) {
     const user = await getUserFromDB(comment.user_id);
+
     return {
         commentID: comment._id,
         content: comment.comment,
         replays: comment.replays,
         likes: comment.likes,
-        user: user,
+        userName: user.profile_name,
+        userID: comment.user_id,
     };
 }
 
-export async function parseToFullGame(game: any) {
-    const updatedGame: any = await parseToGameWithPrice(game);
+export async function parseToFullGame(
+    game: any,
+    priceFromDB = null,
+    idFromDB = null,
+    commentsFromDB = null,
+) {
+    let updatedGame: any;
+    if (priceFromDB) {
+        updatedGame = {
+            comments: commentsFromDB,
+            price: priceFromDB,
+            idFromDB: idFromDB,
+        };
+    } else {
+        updatedGame = await parseToGameWithPrice(game);
+    }
     const screenShots = await getGameScreemShots(game.id);
     const achievements = await getGameAchievements(game.id);
 
     const comments = [];
     for (let index = 0; index < updatedGame.comments.length; index++) {
-        console.log(updatedGame.comments[index]);
-
         const comment: any = await GetCommentFromDB(updatedGame.comments[index]._id, '_id');
         if (comment.length !== 0) {
-            const commentFromAPI: any = await parseComment(comment);
+            const commentFromAPI: any = await parseComment(comment[0]);
             comments.push(commentFromAPI);
         }
     }
@@ -91,7 +105,12 @@ export async function parseToUser(user: any) {
         for (let index = 0; index < user.in_cart.length; index++) {
             const game: any = await GetGameFromDB(user.in_cart[index], '_id');
             if (game.length !== 0) {
-                const gameFromAPI = await parseToFullGame(await getGameById(game[0].game_id));
+                const gameFromAPI = await getGameById(
+                    game[0].game_id,
+                    game[0].price,
+                    game[0]._id,
+                    game[0].comments,
+                );
                 gamesInCart.push(gameFromAPI);
             }
         }
@@ -101,12 +120,11 @@ export async function parseToUser(user: any) {
         for (let index = 0; index < user.game_library.length; index++) {
             const game: any = await GetGameFromDB(user.game_library[index], '_id');
             if (game.length !== 0) {
-                const gameFromAPI = await parseToFullGame(await getGameById(game[0].game_id));
+                const gameFromAPI = await getGameById(game[0].game_id);
                 gamesInLibrary.push(gameFromAPI);
             }
         }
     }
-
     return {
         userID: user.user_id,
         inCart: gamesInCart,

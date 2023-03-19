@@ -41,7 +41,7 @@ export class dbController {
       user_id: userID,
       comment: comment,
       replays: [],
-      likes: 0,
+      likes: [],
     });
     await newComment.save();
   }
@@ -95,13 +95,15 @@ export class dbController {
   }
 
   static async updateComment(
-    commentID: number,
+    commentID: string,
     update: any,
     isUpdateArray: boolean = false
   ) {
     if (isUpdateArray) {
       update = { $push: update };
     }
+    console.log(commentID, update);
+
     await dbController.commentModal.findOneAndUpdate(
       { _id: commentID },
       update
@@ -235,7 +237,7 @@ export class dbController {
     await dbController.gameModal.deleteOne({ game_id: gameId });
   }
 
-  static async deleteComment(commentId: number) {
+  static async deleteComment(commentId: string) {
     await dbController.commentModal.deleteOne({ _id: commentId });
   }
 

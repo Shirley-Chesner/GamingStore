@@ -5,7 +5,7 @@ export const comment = {
   user_id: String,
   comment: String,
   replays: Array<String>,
-  likes: Number,
+  likes: Array<String>,
 };
 
 export const game = {

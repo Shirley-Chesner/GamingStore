@@ -82,7 +82,7 @@ dbRoute.post("/user", (req: Request, res: Response) => {
 
 dbRoute.delete("/comment/:id", (req: Request, res: Response) => {
   dbController
-    .deleteComment(+req.params.id)
+    .deleteComment(req.params.id)
     .then(() => {
       res.status(StatusCodes.OK);
       res.send(`The comment ${req.params.id} was deleted`);
@@ -123,7 +123,7 @@ dbRoute.delete("/game/:id", (req: Request, res: Response) => {
 
 dbRoute.put("/comment/:id", (req: Request, res: Response) => {
   dbController
-    .updateComment(+req.params.id, req.body.update, req.body.isArray)
+    .updateComment(req.params.id, req.body.update, req.body.isArray)
     .then(() => {
       res.status(StatusCodes.OK);
       res.send(`The comment ${req.params.id} was updated`);

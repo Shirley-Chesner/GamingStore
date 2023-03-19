@@ -6,7 +6,6 @@
 .game-screenshots {
     flex: 1;
     padding: 1em;
-    /* background-color: #292929; */
 }
 
 .genral-game-info {
@@ -30,9 +29,8 @@
 }
 
 .bottom-profile {
-    width: 90%;
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 3em;
     padding: 0.5em;
     align-items: start;
@@ -84,32 +82,50 @@
 
 .main-achievements {
     background-color: #292929;
-    /* width: 60%; */
-    /* margin: auto; */
     text-align: left;
     overflow-y: scroll;
     height: 20em;
-    flex: 1 1 0px !important;
 }
 
 .new-comment-content {
     margin: 1em !important;
+    width: 90%;
 }
 
 .submit-new-comment-btn {
     margin-top: 1em !important;
 }
 
+.written-comments {
+    background-color: #444444;
+    margin-bottom: 1em;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.toggle-replays {
+    margin-bottom: 1em !important;
+}
+
+.written-comments-name {
+    top: 0;
+}
+
+.written-comments-content {
+    text-align: center;
+}
+
 .game-comments {
     background-color: #292929;
     height: 20em;
-    /* margin: auto; */
     overflow-y: scroll;
 }
 
 .comments {
     margin-top: 1em !important;
     flex: 1 1 0px !important;
+    font-size: 1.5em;
 }
 
 .achievements-title {
