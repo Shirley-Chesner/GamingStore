@@ -164,7 +164,7 @@ export class dbController {
     const inCartGames: any[] = us.in_cart.map((i: any) =>
       dbController.getGameInFormat(i)
     );
-    const gameLibraryGames: any[] = us.comments.map((i: any) =>
+    const gameLibraryGames: any[] = us.game_library.map((i: any) =>
       dbController.getGameInFormat(i)
     );
 
@@ -182,10 +182,10 @@ export class dbController {
   }
 
   static getGameInFormat(gm: any) {
-    let gamesComments: any[] = [];
-    gm.comments.forEach(function (c: any) {
-      gamesComments.push(dbController.getCommandInFormat(c));
-    });
+    const gamesComments: any[] = gm.comments.map((i: any) =>
+      dbController.getCommandInFormat(i)
+    );
+
     return {
       _id: gm._id,
       game_id: gm.game_id,
