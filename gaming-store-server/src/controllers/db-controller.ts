@@ -158,17 +158,22 @@ export class dbController {
   }
 
   static getUserInFormat(us: any) {
-    let usersComments: any[] = [];
-    us.comments.forEach(function (c: any) {
-      usersComments.push(dbController.getCommandInFormat(c));
-    });
+    const usersComments: any[] = us.comments.map((i: any) =>
+      dbController.getCommandInFormat(i)
+    );
+    const inCartGames: any[] = us.in_cart.map((i: any) =>
+      dbController.getGameInFormat(i)
+    );
+    const gameLibraryGames: any[] = us.comments.map((i: any) =>
+      dbController.getGameInFormat(i)
+    );
 
     return {
       _id: us._id,
       user_id: us.user_id,
-      game_library: us.game_library,
+      game_library: gameLibraryGames,
       wish_list: us.wish_list,
-      in_cart: us.in_cart,
+      in_cart: inCartGames,
       comments: usersComments,
       ratings: us.ratings,
       profile_name: us.profile_name,
@@ -215,7 +220,13 @@ export class dbController {
   }
 
   static async getUsers(condition: {} = {}) {
-    const usersRaw = await dbController.userModal.find(condition).exec();
+    const usersRaw = await dbController.userModal
+      .find(condition)
+      .populate({ path: "comments", model: "comments" })
+      .populate({ path: "in_cart", model: "games" })
+      .populate({ path: "game_library", model: "games" })
+      .exec()
+      .then();
     let users: any[] = [];
     usersRaw.forEach(function (doc: any) {
       users.push(dbController.getUserInFormat(doc));
@@ -225,7 +236,11 @@ export class dbController {
   }
 
   static async getGames(condition: {} = {}) {
-    const gamesRaw = await dbController.gameModal.find(condition).exec().then();
+    const gamesRaw = await dbController.gameModal
+      .find(condition)
+      .populate({ path: "comments", model: "comments" })
+      .exec()
+      .then();
     let games: any[] = [];
     gamesRaw.forEach(function (doc: any) {
       games.push(dbController.getGameInFormat(doc));

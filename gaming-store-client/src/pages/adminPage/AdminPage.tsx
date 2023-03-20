@@ -137,7 +137,7 @@ export const AdminPage: FC = () => {
                         </CardContent>
                     </Card>
                     <Card className="highestBoughtGames">
-                        <CardHeader title="Top Selling Games:" className="cardHeader" />
+                        <CardHeader title="Top Comments:" className="cardHeader" />
                         <CardContent>
                             <table className="topCommentsTable">
                                 <thead>
