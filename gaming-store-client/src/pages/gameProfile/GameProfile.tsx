@@ -59,12 +59,8 @@ export const GameProfile: React.FC = () => {
     }, []);
 
     const checkIfGameInLibrary = async () => {
-        const gameFromDB: any = await GetGameFromDB(+id!);
         const userFromDB: any = await parseToUser(await getUserFromDB(user?.id ? user.id : ''));
-        const isGameIn = userFromDB?.gameLibrary.some(
-            (game: any) => game.idFromDB === gameFromDB[0]._id,
-        );
-
+        const isGameIn = userFromDB?.gameLibrary.some((game: any) => game.game_id == id);
         setIsGameInLibrary(isGameIn);
     };
 
@@ -232,7 +228,7 @@ export const GameProfile: React.FC = () => {
                             Toggle Replays
                         </Button> */}
                         {fullGame?.comments && fullGame?.comments.length !== 0 ? (
-                            fullGame?.comments.map((comment, i) => (
+                            fullGame?.comments.map((comment: any, i: any) => (
                                 <div key={i} className="written-comments">
                                     <Badge
                                         badgeContent={comment?.likes.length}

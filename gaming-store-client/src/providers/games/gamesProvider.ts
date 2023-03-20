@@ -9,7 +9,7 @@ import {
 } from './gamesApiParses';
 
 // TODO: move this to secure place
-const API_KEY = '6c04d3027afb478ebb499d9caad36585';
+const API_KEY = 'bfd6caa51496423a9494859c4628abee';
 const API_URL = 'https://api.rawg.io/api/';
 
 const LIMIT = 30;
@@ -36,15 +36,10 @@ export async function getGames(query: GameQuery = {}) {
     return res.results ? res.results.map(parseToBaseGame) : [];
 }
 
-export async function getGameById(
-    id: number,
-    priceFromDB = null,
-    idFromDB = null,
-    commentsFromDB = null,
-) {
+export async function getGameById(id: number) {
     const url = `${API_URL}games/${id}?key=${API_KEY}`;
     const res = await fetchFromUrl(url);
-    return res ? parseToFullGame(res, priceFromDB, idFromDB, commentsFromDB) : null;
+    return res ? parseToFullGame(res) : null;
 }
 
 export async function getGameScreemShots(id: number) {
