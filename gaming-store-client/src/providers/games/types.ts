@@ -13,6 +13,16 @@ export interface BaseGame {
 // TODO: add more fields
 export interface Game extends BaseGame {
     ratingsCount: number;
+    released: string;
+    website: string;
+    playtime: number;
+    description: string;
+    genres: Array<any>; // later
+    tags: Array<any>;
+    platforms: Array<any>;
+    developers: Array<any>;
+    publishers: Array<any>;
+    esrbRating: string;
 }
 
 export interface Genre {

@@ -12,7 +12,7 @@ export class dbController {
     // Connecting to db
     mongoose.set("strictQuery", false);
     // mongoose.set('debug', true);
-    mongoose.connect(dbHostname);
+    mongoose.connect(dbHostname).then(() => console.log("connected to db!!"));
     dbController.connection = mongoose.connection;
 
     // Setting up the schemas and models

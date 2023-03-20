@@ -104,7 +104,7 @@ export const GameProfile: React.FC = () => {
     };
 
     return (
-        <div style={{ overflow: 'scroll' }}>
+        <div style={{ height: '100%', overflowY: 'auto' }}>
             <div className="main-game-screen">
                 <div className="game-screenshots">
                     {fullGame ? (
@@ -117,10 +117,37 @@ export const GameProfile: React.FC = () => {
                     ) : (
                         ''
                     )}
+                    <div className="buy-game">
+                        <div className="buy-game-title-div">
+                            <h1 className="buy-game-title">{`Buy ${fullGame?.name}:`}</h1>
+                        </div>
+                        <div className="buy-game-btn">
+                            <span>{fullGame?.price}$</span>
+                            {isGameInLibrary ? (
+                                <Button
+                                    className="add-to-card-btn"
+                                    variant="outlined"
+                                    disabled={true}
+                                >
+                                    Game is Already In Library
+                                </Button>
+                            ) : (
+                                <Button
+                                    className="add-to-card-btn"
+                                    variant="outlined"
+                                    onClick={() =>
+                                        navigate(`/cart/${fullGame?.id}/${fullGame?.idFromDB}`)
+                                    }
+                                >
+                                    Add To Cart
+                                </Button>
+                            )}
+                        </div>
+                    </div>
                 </div>
                 <div className="game-info">
                     <h2>{fullGame?.name}</h2>
-                    <img src={fullGame?.imageUrl} height={300} />
+                    <img src={fullGame?.imageUrl} />
                     <div>
                         <ShowMoreText
                             lines={3}
@@ -128,7 +155,6 @@ export const GameProfile: React.FC = () => {
                             less={<ExpandLess />}
                             onClick={onClick}
                             expanded={expand}
-                            width={280}
                             className="game-description"
                         >
                             <span
@@ -156,31 +182,6 @@ export const GameProfile: React.FC = () => {
                                 {genre.name}
                             </span>
                         ))}
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div className="buy-game">
-                    <div className="buy-game-title-div">
-                        <h1 className="buy-game-title">{`Buy ${fullGame?.name}:`}</h1>
-                    </div>
-                    <div className="buy-game-btn">
-                        <span>{fullGame?.price}$</span>
-                        {isGameInLibrary ? (
-                            <Button className="add-to-card-btn" variant="outlined" disabled={true}>
-                                Game is Already In Library
-                            </Button>
-                        ) : (
-                            <Button
-                                className="add-to-card-btn"
-                                variant="outlined"
-                                onClick={() =>
-                                    navigate(`/cart/${fullGame?.id}/${fullGame?.idFromDB}`)
-                                }
-                            >
-                                Add To Cart
-                            </Button>
-                        )}
                     </div>
                 </div>
             </div>
@@ -224,9 +225,6 @@ export const GameProfile: React.FC = () => {
                         </Button>
                     </div>
                     <div className="comments">
-                        {/* <Button className="toggle-replays" onClick={handleClick}>
-                            Toggle Replays
-                        </Button> */}
                         {fullGame?.comments && fullGame?.comments.length !== 0 ? (
                             fullGame?.comments.map((comment: any, i: any) => (
                                 <div key={i} className="written-comments">
@@ -262,29 +260,6 @@ export const GameProfile: React.FC = () => {
                                             </div>
                                         </div>
                                     </Badge>
-
-                                    <div>
-                                        {/* <List>
-                                            <Collapse in={open} timeout="auto" unmountOnExit>
-                                                <List component="div" disablePadding>
-                                                    <TextField
-                                                        onChange={(event) => {
-                                                            addingAReplay(
-                                                                event.target.value,
-                                                                comment.commentID,
-                                                            );
-                                                        }}
-                                                        label="Add Replay"
-                                                        variant="outlined"
-                                                        multiline
-                                                    />
-                                                    {comment?.replays.map((replay: any, i: any) => (
-                                                        <ListItemText primary={replay} key={i} />
-                                                    ))}
-                                                </List>
-                                            </Collapse>
-                                        </List> */}
-                                    </div>
                                 </div>
                             ))
                         ) : (

@@ -1,6 +1,6 @@
 .game-details {
     display: flex;
-    width: 15em;
+    width: 20em;
     flex-direction: column;
     margin: 0.5em;
     padding-bottom: 0.5em;
@@ -8,7 +8,7 @@
 }
 
 .game-details img {
-    height: 8em;
+    height: 12em;
     width: 100%;
     object-fit: cover;
 }

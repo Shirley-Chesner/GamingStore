@@ -8,9 +8,12 @@
     padding: 1em;
 }
 
+.game-screenshots .carousel {
+    height: 25em !important;
+}
+
 .genral-game-info {
-    text-align: left;
-    margin-left: 20px;
+    margin: 0 20px;
 }
 
 .game-description {
@@ -37,7 +40,17 @@
 }
 
 .game-info {
-    padding: 1em;
+    margin: 1em;
+}
+
+.game-info h2 {
+    margin: 0.5em;
+}
+
+.game-info img {
+    object-fit: cover;
+    width: 100%;
+    height: 16em;
 }
 
 .genere-of-game {
@@ -60,8 +73,6 @@
 
 .buy-game {
     background-color: #292929;
-    margin: auto;
-    width: 50%;
 }
 
 .buy-game-btn {
@@ -80,11 +91,13 @@
     padding: 0.5em;
 }
 
+.achievements > div {
+    margin: 0.5em;
+}
+
 .main-achievements {
     background-color: #292929;
     text-align: left;
-    overflow-y: scroll;
-    height: 20em;
 }
 
 .new-comment-content {
@@ -118,8 +131,7 @@
 
 .game-comments {
     background-color: #292929;
-    height: 20em;
-    overflow-y: scroll;
+    padding: 1em;
 }
 
 .comments {

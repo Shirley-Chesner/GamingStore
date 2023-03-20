@@ -52,7 +52,7 @@ const Page: FC<FormProps> = (formProps) => {
                 <AppLogo className="small-app-logo" small />
                 <LoginForm {...formProps} />
                 <div className="right-side">
-                    <img className="login-background-img" src="./login-background.jpeg" />
+                    <img className="login-background-img" src="/login-background.jpeg" />
                     <AppLogo />
                 </div>
             </Card>
