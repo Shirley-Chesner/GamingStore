@@ -92,7 +92,7 @@ export const Carousel: FC<Props> = ({
                 setSlideTo(null);
             }, 1000);
         },
-        [getNextSlide],
+        [getNextSlide, slideTo],
     );
 
     useEffect(() => {

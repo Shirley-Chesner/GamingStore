@@ -9,7 +9,7 @@ import {
 } from './gamesApiParses';
 
 // TODO: move this to secure place
-const API_KEY = 'd4687bc2b72c4bd281670ceae4e8c209';
+const API_KEY = '6c04d3027afb478ebb499d9caad36585';
 const API_URL = 'https://api.rawg.io/api/';
 
 const LIMIT = 30;
