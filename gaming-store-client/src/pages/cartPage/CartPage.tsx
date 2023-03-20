@@ -57,7 +57,7 @@ export const CartPage: FC = () => {
 
     const getTotalPrice = () => {
         let price = 0;
-        userInfo?.inCart.forEach((item) => {
+        userInfo?.inCart.forEach((item: any) => {
             price += item?.price;
         });
         return price;
@@ -65,7 +65,7 @@ export const CartPage: FC = () => {
 
     const getTotalGameCount = () => {
         let count = 0;
-        userInfo?.inCart.forEach((item) => {
+        userInfo?.inCart.forEach((item: any) => {
             count++;
         });
         return count;
@@ -88,7 +88,7 @@ export const CartPage: FC = () => {
 
     const buyGames = async () => {
         const games: any = [];
-        userInfo?.inCart.forEach((game) => {
+        userInfo?.inCart.forEach((game: any) => {
             games.push(game?.idFromDB);
         });
         await fetch(`http://localhost:1234/user/${user?.id}`, {

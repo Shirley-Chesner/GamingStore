@@ -2,8 +2,6 @@ import {
     GetGameFromDB,
     getGameScreemShots,
     getGameAchievements,
-    getGameById,
-    GetCommentFromDB,
     getUserFromDB,
 } from './gamesProvider';
 import { BaseGame, Genre, GenreDetails } from './types';
@@ -35,31 +33,16 @@ export async function parseComment(comment: any) {
     };
 }
 
-export async function parseToFullGame(
-    game: any,
-    priceFromDB = null,
-    idFromDB = null,
-    commentsFromDB = null,
-) {
-    let updatedGame: any;
-    if (priceFromDB) {
-        updatedGame = {
-            comments: commentsFromDB,
-            price: priceFromDB,
-            idFromDB: idFromDB,
-        };
-    } else {
-        updatedGame = await parseToGameWithPrice(game);
-    }
+export async function parseToFullGame(game: any) {
+    const updatedGame: any = await parseToGameWithPrice(game);
     const screenShots = await getGameScreemShots(game.id);
     const achievements = await getGameAchievements(game.id);
 
     const comments = [];
     for (let index = 0; index < updatedGame.comments.length; index++) {
-        const comment: any = await GetCommentFromDB(updatedGame.comments[index]._id, '_id');
-        if (comment.length !== 0) {
-            const commentFromAPI: any = await parseComment(comment[0]);
-            comments.push(commentFromAPI);
+        if (updatedGame.comments[index].length != 0) {
+            const parsedComment = await parseComment(updatedGame.comments[index]);
+            comments.push(parsedComment);
         }
     }
 
@@ -100,49 +83,30 @@ export function parseToScreenShot(game: any) {
 }
 
 export async function parseToUser(user: any) {
-    const gamesInCart = [];
-    if (user && user.in_cart) {
-        for (let index = 0; index < user.in_cart.length; index++) {
-            const game: any = await GetGameFromDB(user.in_cart[index], '_id');
-            if (game.length !== 0) {
-                const gameFromAPI = await getGameById(
-                    game[0].game_id,
-                    game[0].price,
-                    game[0]._id,
-                    game[0].comments,
-                );
-                gamesInCart.push(gameFromAPI);
-            }
-        }
-    }
-    const gamesInLibrary = [];
-    if (user && user.game_library) {
-        for (let index = 0; index < user.game_library.length; index++) {
-            const game: any = await GetGameFromDB(user.game_library[index], '_id');
-            if (game.length !== 0) {
-                const gameFromAPI = await getGameById(game[0].game_id);
-                gamesInLibrary.push(gameFromAPI);
-            }
-        }
-    }
     return {
         userID: user.user_id,
-        inCart: gamesInCart,
-        gameLibrary: gamesInLibrary,
-        comments: user.Comments,
+        inCart: user.in_cart,
+        gameLibrary: user.game_library,
+        comments: user.comments,
     };
 }
 
 export async function parseToGameWithPrice(game: any): Promise<BaseGame> {
     const info: any = await GetGameFromDB(game.id);
     if (info.length != 0) {
-        const a = { ...game, price: info[0].price };
-        const b = { ...a, idFromDB: info[0]._id };
-        return parseToBaseGame({ ...b, comments: info[0].comments });
+        return parseToBaseGame({
+            ...game,
+            comments: info[0].comments,
+            price: info[0].price,
+            idFromDB: info[0]._id,
+        });
     } else {
-        const a = { ...game, price: Math.floor(Math.random() * 301) };
-        const b = { ...a, idFromDB: '0' };
-        return parseToBaseGame({ ...b, comments: [] });
+        return parseToBaseGame({
+            ...game,
+            comments: [],
+            price: Math.floor(Math.random() * 301),
+            idFromDB: 0,
+        });
     }
 }
 

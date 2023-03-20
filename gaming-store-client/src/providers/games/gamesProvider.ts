@@ -36,15 +36,10 @@ export async function getGames(query: GameQuery = {}) {
     return res.results ? res.results.map(parseToBaseGame) : [];
 }
 
-export async function getGameById(
-    id: number,
-    priceFromDB = null,
-    idFromDB = null,
-    commentsFromDB = null,
-) {
+export async function getGameById(id: number) {
     const url = `${API_URL}games/${id}?key=${API_KEY}`;
     const res = await fetchFromUrl(url);
-    return res ? parseToFullGame(res, priceFromDB, idFromDB, commentsFromDB) : null;
+    return res ? parseToFullGame(res) : null;
 }
 
 export async function getGameScreemShots(id: number) {
